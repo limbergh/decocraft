@@ -105,7 +105,7 @@
      Aparece solo cuando ya se bajó lo suficiente como para necesitarlo. */
   .dc-subir {
     position: fixed; right: clamp(16px, 4vw, 28px); bottom: clamp(16px, 4vw, 28px);
-    z-index: 50; width: 54px; height: 54px; border-radius: 999px;
+    z-index: 20; width: 54px; height: 54px; border-radius: 999px;
     display: inline-flex; align-items: center; justify-content: center;
     border: none; cursor: pointer; background: #af9d36; color: #fff8dc;
     box-shadow: 0 10px 26px rgba(36,31,22,.26);
@@ -183,9 +183,14 @@
     </div>
   </sc-if>
 
-  <button class="{{ claseVelo }}" onClick="{{ cerrarMenu }}" aria-label="Cerrar menú"></button>
-
   <header style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: clamp(12px, 2vw, 22px) 0; position: sticky; top: 0; background: #fff8dc; z-index: 30;">
+    <!-- El velo va DENTRO del header a propósito. El header es sticky con
+         z-index, o sea que abre un contexto de apilamiento propio: si el velo
+         se queda fuera, el z-index del cajón se compara solo contra sus
+         hermanos del header y la página entiende que todo el menú está en el
+         nivel 30, por debajo del velo. El resultado era que el velo tapaba el
+         cajón y se comía sus clics: el menú se cerraba en vez de navegar. -->
+    <button class="{{ claseVelo }}" onClick="{{ cerrarMenu }}" aria-label="Cerrar menú"></button>
     <a onClick="{{ irInicio }}" class="dc-logo" style="display: flex; align-items: center; gap: 12px;">
       <img src="assets/logo.webp" alt="DecoCraft" style="width: 54px; height: 54px; object-fit: contain;">
       <span style="font-family: 'Caprasimo', serif; font-size: 21px; color: #af9d36;">DecoCraft</span>
