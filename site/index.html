@@ -142,21 +142,30 @@
        producto. En fila caben en un renglón que se desliza con el dedo, y
        al tocar una categoría los productos quedan ahí mismo. Los !important
        son porque flex y max-width vienen en el style de la etiqueta. */
+    /* display: contents disuelve la caja del aside y deja a sus tres bloques
+       como hermanos directos de la rejilla de productos. Eso permite mandar
+       la tarjeta de "¿No encuentras lo que buscas?" DEBAJO de las fotos con
+       order: apilada arriba se comía 178px antes del primer producto. En
+       escritorio la barra lateral sigue entera y pegajosa. */
+    .dc-filtros { display: contents !important; }
     /* El min-width: 0 no es adorno: un item de flex/grid mide por defecto lo
-       que mida su contenido, así que la fila de chips estiraba el aside a su
-       ancho completo y desbordaba la página en vez de recortarse y deslizar. */
-    .dc-filtros { flex: 1 1 100% !important; min-width: 0; }
-    .dc-filtros > div { min-width: 0; }
+       que mida su contenido, así que la fila de chips estiraba su bloque a lo
+       ancho de todos los chips y desbordaba la página en vez de deslizar. */
+    .dc-filtros > div,
+    .dc-filtros + div { flex: 1 1 100%; min-width: 0; }
+    .dc-filtros > div:nth-child(1) { order: 1; } /* buscador */
+    .dc-filtros > div:nth-child(2) { order: 2; } /* categorías */
+    .dc-filtros + div            { order: 3; }   /* rejilla de productos */
+    .dc-filtros > div:nth-child(3) { order: 4; } /* tarjeta rosa */
+    /* Chips que envuelven en varios renglones: en una sola fila deslizable
+       solo se veían tres y media, y las categorías que no se ven no se tocan.
+       El display: flex lleva !important porque el style de la etiqueta dice
+       grid, y en grid las columnas se reparten a lo ancho en vez de que cada
+       chip mida lo que mide su texto. */
     .dc-cats {
-      grid-auto-flow: column;
-      grid-auto-columns: max-content;
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 2px;
+      display: flex !important;
+      flex-wrap: wrap;
     }
-    .dc-cats::-webkit-scrollbar { display: none; }
     .dc-cats > a { white-space: nowrap; }
   }
 
