@@ -28,6 +28,70 @@
   @media (prefers-reduced-motion: reduce) { #hojas { display: none; } }
   .rv { opacity: 0; }
   .rv.in { animation: rise .8s cubic-bezier(.16,.84,.3,1) forwards; }
+
+  /* ── Menú ──────────────────────────────────────────────────────────────
+     En escritorio los enlaces van en fila dentro del encabezado. En celular
+     el encabezado los escondía envolviéndolos en dos renglones y empujaba
+     todo el sitio hacia abajo, así que ahí se convierten en un cajón que
+     entra por la derecha ENCIMA del contenido (position: fixed), sin mover
+     nada de lo que hay debajo. */
+  .dc-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; }
+  .dc-nav a { color: #241f16; padding: 10px 16px; border-radius: 999px; }
+  .dc-nav a:hover { background: #f7d0bc; color: #8a5a3c; }
+  .dc-hamburguesa, .dc-cerrar, .dc-velo { display: none; }
+
+  /* Los 4 enlaces en fila necesitan ~960px de ventana; por debajo de eso se
+     partian en dos renglones y el encabezado crecia al doble. */
+  @media (max-width: 1040px) {
+    .dc-nav {
+      position: fixed; top: 0; right: 0; bottom: 0; z-index: 60;
+      width: min(82vw, 320px);
+      flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 2px;
+      background: #fff8dc; padding: 18px 16px 28px;
+      box-shadow: -20px 0 50px rgba(36,31,22,.22);
+      overflow-y: auto;
+      /* Cerrado se va fuera de la pantalla y además se oculta, para que no
+         quede atrapable con el tabulador. */
+      transform: translateX(102%); visibility: hidden;
+      transition: transform .3s cubic-bezier(.16,.84,.3,1), visibility .3s;
+    }
+    .dc-nav.abierto { transform: none; visibility: visible; }
+    .dc-nav a { padding: 15px 16px; font-size: 17px; }
+    .dc-hamburguesa, .dc-cerrar { display: inline-flex; }
+    .dc-cerrar { align-self: flex-end; margin-bottom: 6px; }
+    .dc-velo.abierto {
+      display: block; position: fixed; inset: 0; z-index: 55;
+      background: rgba(36,31,22,.45); border: none; width: 100%; cursor: pointer;
+    }
+    .dc-logo img { width: 44px !important; height: 44px !important; }
+  }
+
+  .dc-boton-icono {
+    align-items: center; justify-content: center;
+    width: 46px; height: 46px; flex: none;
+    border: 1.5px solid rgba(36,31,22,.16); border-radius: 999px;
+    background: transparent; color: #554c3a; cursor: pointer;
+  }
+  .dc-boton-icono:hover { background: #e8dfae; border-color: #e8dfae; }
+
+  /* ── Botón para volver arriba ─────────────────────────────────────────
+     Aparece solo cuando ya se bajó lo suficiente como para necesitarlo. */
+  .dc-subir {
+    position: fixed; right: clamp(16px, 4vw, 28px); bottom: clamp(16px, 4vw, 28px);
+    z-index: 50; width: 54px; height: 54px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer; background: #af9d36; color: #fff8dc;
+    box-shadow: 0 10px 26px rgba(36,31,22,.26);
+    opacity: 0; transform: translateY(16px) scale(.9); pointer-events: none;
+    transition: opacity .28s, transform .28s cubic-bezier(.16,.84,.3,1), background .2s;
+  }
+  .dc-subir.visible { opacity: 1; transform: none; pointer-events: auto; }
+  .dc-subir:hover { background: #8d7c26; }
+  .dc-subir svg { transition: transform .2s; }
+  .dc-subir:hover svg { transform: translateY(-3px); }
+  @media (prefers-reduced-motion: reduce) {
+    .dc-nav, .dc-subir, .dc-subir svg { transition: none; }
+  }
 </style>
 </helmet>
 
@@ -48,14 +112,19 @@
     </div>
   </sc-if>
 
-  <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: clamp(14px, 2vw, 22px) 0; position: sticky; top: 0; background: #fff8dc; z-index: 30;">
-    <a onClick="{{ irInicio }}" style="display: flex; align-items: center; gap: 12px;">
+  <button class="{{ claseVelo }}" onClick="{{ cerrarMenu }}" aria-label="Cerrar menú"></button>
+
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: clamp(12px, 2vw, 22px) 0; position: sticky; top: 0; background: #fff8dc; z-index: 30;">
+    <a onClick="{{ irInicio }}" class="dc-logo" style="display: flex; align-items: center; gap: 12px;">
       <img src="assets/logo.png" alt="DecoCraft" style="width: 54px; height: 54px; object-fit: contain;">
       <span style="font-family: 'Caprasimo', serif; font-size: 21px; color: #af9d36;">DecoCraft</span>
     </a>
-    <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;">
+    <nav class="{{ claseNav }}">
+      <button class="dc-cerrar dc-boton-icono" onClick="{{ cerrarMenu }}" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
       <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
-        <a onClick="{{ n.go }}" style="color: #241f16; padding: 10px 16px; border-radius: 999px;" style-hover="background:#f7d0bc; color:#8a5a3c;">{{ n.label }}</a>
+        <a onClick="{{ n.go }}">{{ n.label }}</a>
       </sc-for>
     </nav>
     <div style="display: flex; align-items: center; gap: 10px;">
@@ -65,6 +134,9 @@
       <button onClick="{{ irCarrito }}" style="display: flex; align-items: center; gap: 9px; border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 12px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">
         Bolsa
         <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 999px; background: #fff8dc; color: #6f6119; font-size: 12px; font-weight: 700;">{{ totalPiezas }}</span>
+      </button>
+      <button class="dc-hamburguesa dc-boton-icono" onClick="{{ abrirMenu }}" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
       </button>
     </div>
   </header>
@@ -652,6 +724,10 @@
       </div>
     </sc-for>
   </footer>
+
+  <button class="{{ claseSubir }}" onClick="{{ subirArriba }}" aria-label="Volver arriba" title="Volver arriba">
+    <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"></path><path d="M5.5 12.5L12 6l6.5 6.5"></path></svg>
+  </button>
 </div>
 
 </x-dc>
@@ -734,6 +810,8 @@ class Component extends DCLogic {
       custom: {},
       reviewIdx: 0,
       hojas: true,
+      menuAbierto: false,
+      subirVisible: false,
       corte: CORTES[0],
       talla: 'M',
       vasoOpc: VASO_OPC[0],
@@ -749,6 +827,12 @@ class Component extends DCLogic {
     this.cargarCatalogo();
     this.observe();
     this._hojas = setTimeout(() => this.setState({ hojas: false }), 21000);
+    // Solo se re-renderiza al cruzar el umbral, no en cada pixel de scroll.
+    this._scroll = () => {
+      const visible = window.scrollY > 520;
+      if (visible !== this.state.subirVisible) this.setState({ subirVisible: visible });
+    };
+    window.addEventListener('scroll', this._scroll, { passive: true });
   }
   componentDidUpdate(_, prev) { if (prev.screen !== this.state.screen) this.observe(); }
   observe() {
@@ -759,7 +843,19 @@ class Component extends DCLogic {
     setTimeout(() => document.querySelectorAll('.rv:not(.in)').forEach((el) => io.observe(el)), 30);
     this._io = io;
   }
-  componentWillUnmount() { if (this._io) this._io.disconnect(); clearTimeout(this._hojas); }
+  componentWillUnmount() {
+    if (this._io) this._io.disconnect();
+    clearTimeout(this._hojas);
+    window.removeEventListener('scroll', this._scroll);
+    document.body.style.overflow = '';
+  }
+
+  // Con el cajón abierto se bloquea el scroll del fondo: si no, al arrastrar
+  // sobre el velo se mueve el sitio que está detrás.
+  menu(abierto) {
+    document.body.style.overflow = abierto ? 'hidden' : '';
+    this.setState({ menuAbierto: abierto });
+  }
 
   // El catálogo lo publica el panel en el servidor (catalogo.json); SEED solo
   // se usa mientras no exista ese archivo, en la primera visita de todas.
@@ -785,7 +881,13 @@ class Component extends DCLogic {
         .catch(() => this.setState({ aviso: 'No se pudo guardar en el servidor. Revisa tu conexión y vuelve a intentarlo.' }));
     }
   }
-  go = (screen) => { this.setState({ screen, aviso: '' }); window.scrollTo(0, 0); };
+  // Todas las pantallas pasan por aquí, así que el menú se cierra solo al
+  // navegar sin tener que acordarse en cada enlace.
+  go = (screen) => {
+    document.body.style.overflow = '';
+    this.setState({ screen, aviso: '', menuAbierto: false });
+    window.scrollTo(0, 0);
+  };
   tono(i) { return TONOS[i % TONOS.length]; }
   fmt(n) { return '$' + Number(n || 0).toLocaleString('es-MX'); }
 
@@ -926,6 +1028,12 @@ class Component extends DCLogic {
       esCarrito: s.screen === 'carrito',
       esAdmin: s.screen === 'admin',
       esPanel: ES_PANEL,
+      claseNav: s.menuAbierto ? 'dc-nav abierto' : 'dc-nav',
+      claseVelo: s.menuAbierto ? 'dc-velo abierto' : 'dc-velo',
+      claseSubir: s.subirVisible ? 'dc-subir visible' : 'dc-subir',
+      abrirMenu: () => this.menu(true),
+      cerrarMenu: () => this.menu(false),
+      subirArriba: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       esPersonalizar: s.screen === 'personalizar',
       esGracias: s.screen === 'gracias',
       irPersonalizar: () => this.go('personalizar'),
