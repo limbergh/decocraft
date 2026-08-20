@@ -15,7 +15,7 @@ const OUT = 'site/index.html';
 
 // ── Configuración del sitio ────────────────────────────────────────────────
 const DOMINIO = 'https://decocraftmx.com';
-const WHATSAPP = '5215512345678'; // TODO: número real de DecoCraft (52 + 10 dígitos)
+const WHATSAPP = '525655802250'; // +52 56 5580 2250
 const TITULO = 'DecoCraft — Regalos y papelería personalizada hecha a mano';
 const DESC =
   'Vasos, stickers, playeras, agendas y box lunch personalizados a mano. ' +
@@ -60,8 +60,11 @@ html = html.replace(/'?(\.\/img\/)?hf_\d+_\d+_([0-9a-f-]{36})\.png'?/g, (m, _p, 
 html = html.replace(/([0-9a-f-]{36})\.png/g, (m, uuid) => (IMAGENES[uuid] ? `${IMAGENES[uuid]}.webp` : m));
 html = html.replace(/assets\/logo\.png/g, 'assets/logo.webp');
 
-// ── 2. Número de WhatsApp (valor por defecto de la prop) ───────────────────
-html = html.replace(/&quot;default&quot;:&quot;5215512345678&quot;/, `&quot;default&quot;:&quot;${WHATSAPP}&quot;`);
+// ── 2. Número de WhatsApp ──────────────────────────────────────────────────
+// Está en dos lados: el default de la prop (en data-props) y el respaldo del
+// propio código. Los dos son el número de ejemplo del diseño.
+const WHATSAPP_EJEMPLO = '5215512345678';
+html = html.replaceAll(WHATSAPP_EJEMPLO, WHATSAPP);
 
 // ── 3. <head> real: SEO + favicon + React local ────────────────────────────
 const head = `<meta charset="utf-8">
@@ -105,6 +108,7 @@ html = html.replace('<html>', '<html lang="es">');
 if (fallos.length) throw new Error('UUID sin mapear en IMAGENES: ' + [...new Set(fallos)].join(', '));
 if (html.includes('cloudfront.net')) throw new Error('Quedaron URLs del CDN sin reemplazar');
 if (html.includes('logo.png')) throw new Error('Quedó una referencia a logo.png');
+if (html.includes(WHATSAPP_EJEMPLO)) throw new Error('Quedó el WhatsApp de ejemplo en el sitio');
 
 writeFileSync(OUT, html);
 console.log(`OK  ${OUT}  (${(html.length / 1024).toFixed(0)} KB)  WhatsApp: ${WHATSAPP}`);

@@ -682,7 +682,7 @@
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5215512345678&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tienda&quot;},&quot;envioGratisDesde&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:800,&quot;min&quot;:0,&quot;max&quot;:3000,&quot;step&quot;:50,&quot;unit&quot;:&quot;MXN&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Tienda&quot;},&quot;mostrarTicker&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;},&quot;hojasOtono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;525655802250&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tienda&quot;},&quot;envioGratisDesde&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:800,&quot;min&quot;:0,&quot;max&quot;:3000,&quot;step&quot;:50,&quot;unit&quot;:&quot;MXN&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Tienda&quot;},&quot;mostrarTicker&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;},&quot;hojasOtono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;}}">
 const TONOS = ['#f7d0bc', '#eaa93d', '#e8dfae'];
 const SEED = [
   { id: 'p1', nombre: 'Vaso escarchado flores', categoria: 'Vasos y termos', precio: 260, desc: 'Vidrio de 500ml escarchado a mano, con tapa y popote de acero.', badge: 'Nuevo', activo: true, img: '', slot: 'vaso escarchado' },
@@ -914,7 +914,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
-    const wa = String(this.props.whatsapp || '5215512345678').replace(/[^0-9]/g, '');
+    const wa = String(this.props.whatsapp || '525655802250').replace(/[^0-9]/g, '');
     const publicados = s.productos.filter((p) => p.activo !== false);
     const q = s.busqueda.trim().toLowerCase();
     const filtrados = publicados.filter((p) => (s.catFiltro === 'Todo' || p.categoria === s.catFiltro) && (!q || p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q)));
