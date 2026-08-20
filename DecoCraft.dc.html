@@ -59,7 +59,9 @@
       </sc-for>
     </nav>
     <div style="display: flex; align-items: center; gap: 10px;">
-      <button onClick="{{ irAdmin }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#e8dfae; border-color:#e8dfae;">Mi panel</button>
+      <sc-if value="{{ esPanel }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ irAdmin }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#e8dfae; border-color:#e8dfae;">Mi panel</button>
+      </sc-if>
       <button onClick="{{ irCarrito }}" style="display: flex; align-items: center; gap: 9px; border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 12px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">
         Bolsa
         <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 999px; background: #fff8dc; color: #6f6119; font-size: 12px; font-weight: 700;">{{ totalPiezas }}</span>
@@ -709,8 +711,11 @@ const TALLAS = { 'Corte normal': ['XS', 'S', 'M', 'L', 'XL', 'XXL'], 'Oversize':
 const VASO_OPC = ['Vaso con popote y tapa', 'Solo vaso'];
 const esPlayera = (cat) => cat === 'Playeras';
 const esVaso = (cat) => cat === 'Vasos y termos';
-const KEY_P = 'decocraft.productos.v1';
 const KEY_C = 'decocraft.carrito.v1';
+// El panel solo existe en mipanel.decocraftmx.com, que nginx protege con
+// usuario y contraseña. En el sitio público esto es false y ni el botón ni la
+// pantalla de administración se renderizan.
+const ES_PANEL = typeof location !== 'undefined' && /^mipanel\./.test(location.hostname);
 
 class Component extends DCLogic {
   constructor(p) {
@@ -738,13 +743,10 @@ class Component extends DCLogic {
   }
   componentDidMount() {
     try {
-      const p = JSON.parse(localStorage.getItem(KEY_P) || 'null');
       const c = JSON.parse(localStorage.getItem(KEY_C) || 'null');
-      const next = {};
-      if (Array.isArray(p) && p.length) next.productos = p;
-      if (c && typeof c === 'object') next.carrito = c;
-      if (Object.keys(next).length) this.setState(next);
+      if (c && typeof c === 'object') this.setState({ carrito: c });
     } catch (e) {}
+    this.cargarCatalogo();
     this.observe();
     this._hojas = setTimeout(() => this.setState({ hojas: false }), 21000);
   }
@@ -759,11 +761,29 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { if (this._io) this._io.disconnect(); clearTimeout(this._hojas); }
 
+  // El catálogo lo publica el panel en el servidor (catalogo.json); SEED solo
+  // se usa mientras no exista ese archivo, en la primera visita de todas.
+  cargarCatalogo() {
+    fetch('/catalogo.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p) => { if (Array.isArray(p) && p.length) this.setState({ productos: p }); })
+      .catch(() => {});
+  }
   persist(productos, carrito) {
+    // El carrito es de cada visitante, se queda en su navegador.
     try {
-      if (productos) localStorage.setItem(KEY_P, JSON.stringify(productos));
       if (carrito) localStorage.setItem(KEY_C, JSON.stringify(carrito));
     } catch (e) {}
+    // El catálogo es de la tienda, se guarda en el servidor.
+    if (productos && ES_PANEL) {
+      fetch('/api/catalogo', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(productos)
+      })
+        .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); })
+        .catch(() => this.setState({ aviso: 'No se pudo guardar en el servidor. Revisa tu conexión y vuelve a intentarlo.' }));
+    }
   }
   go = (screen) => { this.setState({ screen, aviso: '' }); window.scrollTo(0, 0); };
   tono(i) { return TONOS[i % TONOS.length]; }
@@ -801,12 +821,17 @@ class Component extends DCLogic {
   };
 
   setForm = (k, v) => this.setState((s) => ({ form: Object.assign({}, s.form, { [k]: v }) }));
+  // La foto se sube al servidor y en el producto solo queda su ruta. Antes se
+  // guardaba el archivo entero en base64 dentro del catálogo, lo que hacía que
+  // el JSON creciera megabyte a megabyte.
   onImagen = (e) => {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
-    const r = new FileReader();
-    r.onload = () => this.setForm('img', String(r.result));
-    r.readAsDataURL(f);
+    this.setState({ aviso: 'Subiendo la foto…' });
+    fetch('/api/imagen', { method: 'POST', headers: { 'content-type': f.type || 'application/octet-stream' }, body: f })
+      .then((r) => r.json().then((d) => { if (!r.ok) throw new Error(d.error || 'HTTP ' + r.status); return d; }))
+      .then((d) => { this.setForm('img', d.url); this.setState({ aviso: '' }); })
+      .catch((err) => this.setState({ aviso: 'No se pudo subir la foto: ' + err.message }));
   };
   nuevo = () => this.setState({ editId: null, aviso: '', form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true } });
   editar = (p) => {
@@ -900,6 +925,7 @@ class Component extends DCLogic {
       esProducto: s.screen === 'producto',
       esCarrito: s.screen === 'carrito',
       esAdmin: s.screen === 'admin',
+      esPanel: ES_PANEL,
       esPersonalizar: s.screen === 'personalizar',
       esGracias: s.screen === 'gracias',
       irPersonalizar: () => this.go('personalizar'),
