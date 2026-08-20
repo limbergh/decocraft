@@ -30,39 +30,6 @@
     "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "./vendor/react-dom.production.min.js"
   };
 </script>
-<script>
-  // DIAGNÓSTICO TEMPORAL — quitar cuando esté resuelto lo del contenido que
-  // desaparece. Guarda el último error de JavaScript en el propio teléfono,
-  // para poder leerlo después entrando a decocraftmx.com/?diag=1
-  window.addEventListener('error', function (e) {
-    try {
-      localStorage.setItem('decocraft.error', JSON.stringify({
-        mensaje: e.message,
-        pila: ((e.error && e.error.stack) || '').slice(0, 1200),
-        ancho: window.innerWidth,
-        cuando: new Date().toString()
-      }, null, 1));
-    } catch (_) {}
-  });
-  window.addEventListener('unhandledrejection', function (e) {
-    try {
-      localStorage.setItem('decocraft.error', JSON.stringify({
-        mensaje: 'promesa sin capturar: ' + e.reason,
-        pila: ((e.reason && e.reason.stack) || '').slice(0, 1200),
-        ancho: window.innerWidth,
-        cuando: new Date().toString()
-      }, null, 1));
-    } catch (_) {}
-  });
-  if (location.search.indexOf('diag=1') !== -1) {
-    document.addEventListener('DOMContentLoaded', function () {
-      var caja = document.createElement('pre');
-      caja.textContent = localStorage.getItem('decocraft.error') || 'No hay ningún error registrado en este teléfono.';
-      caja.style.cssText = 'position:fixed;inset:0;z-index:99999;margin:0;padding:16px;background:#fff;color:#111;font:12px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow:auto';
-      document.body.appendChild(caja);
-    });
-  }
-</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -974,14 +941,29 @@ class Component extends DCLogic {
     };
     window.addEventListener('scroll', this._scroll, { passive: true });
   }
-  componentDidUpdate(_, prev) { if (prev.screen !== this.state.screen) this.observe(); }
+  // Antes esto era `componentDidUpdate(_, prev) { if (prev.screen !== ... }`.
+  // React pasa el estado anterior como segundo argumento, pero este runtime
+  // no lo pasa: prev llegaba undefined, `prev.screen` lanzaba y observe() no
+  // se ejecutaba nunca después del primer render. Como las secciones nacen
+  // con opacity: 0 y solo observe() les pone la clase que las revela, al
+  // volver al inicio desde cualquier otra pantalla la página se veía vacía:
+  // solo el encabezado. El runtime se tragaba el error en su console.error.
+  //
+  // Ya no depende del estado anterior: se reengancha en cada render y punto.
+  // Observar un elemento que ya se está observando no hace nada, así que
+  // llamarlo de más sale gratis.
+  componentDidUpdate() { this.observe(); }
   observe() {
-    if (this._io) this._io.disconnect();
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.1 });
-    setTimeout(() => document.querySelectorAll('.rv:not(.in)').forEach((el) => io.observe(el)), 30);
-    this._io = io;
+    if (!this._io) {
+      this._io = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); this._io.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+    }
+    // Ahora y otra vez a los 30ms: lo primero engancha lo que ya está en el
+    // DOM, lo segundo alcanza a lo que el runtime aún estuviera montando.
+    const enganchar = () => document.querySelectorAll('.rv:not(.in)').forEach((el) => this._io.observe(el));
+    enganchar();
+    setTimeout(enganchar, 30);
   }
   componentWillUnmount() {
     if (this._io) this._io.disconnect();

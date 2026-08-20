@@ -96,39 +96,6 @@ const head = `<meta charset="utf-8">
     "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "./vendor/react-dom.production.min.js"
   };
 </script>
-<script>
-  // DIAGNÓSTICO TEMPORAL — quitar cuando esté resuelto lo del contenido que
-  // desaparece. Guarda el último error de JavaScript en el propio teléfono,
-  // para poder leerlo después entrando a decocraftmx.com/?diag=1
-  window.addEventListener('error', function (e) {
-    try {
-      localStorage.setItem('decocraft.error', JSON.stringify({
-        mensaje: e.message,
-        pila: ((e.error && e.error.stack) || '').slice(0, 1200),
-        ancho: window.innerWidth,
-        cuando: new Date().toString()
-      }, null, 1));
-    } catch (_) {}
-  });
-  window.addEventListener('unhandledrejection', function (e) {
-    try {
-      localStorage.setItem('decocraft.error', JSON.stringify({
-        mensaje: 'promesa sin capturar: ' + e.reason,
-        pila: ((e.reason && e.reason.stack) || '').slice(0, 1200),
-        ancho: window.innerWidth,
-        cuando: new Date().toString()
-      }, null, 1));
-    } catch (_) {}
-  });
-  if (location.search.indexOf('diag=1') !== -1) {
-    document.addEventListener('DOMContentLoaded', function () {
-      var caja = document.createElement('pre');
-      caja.textContent = localStorage.getItem('decocraft.error') || 'No hay ningún error registrado en este teléfono.';
-      caja.style.cssText = 'position:fixed;inset:0;z-index:99999;margin:0;padding:16px;background:#fff;color:#111;font:12px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow:auto';
-      document.body.appendChild(caja);
-    });
-  }
-</script>
 <script src="./support.js"></script>`;
 
 const headOriginal =

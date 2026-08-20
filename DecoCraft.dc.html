@@ -914,14 +914,29 @@ class Component extends DCLogic {
     };
     window.addEventListener('scroll', this._scroll, { passive: true });
   }
-  componentDidUpdate(_, prev) { if (prev.screen !== this.state.screen) this.observe(); }
+  // Antes esto era `componentDidUpdate(_, prev) { if (prev.screen !== ... }`.
+  // React pasa el estado anterior como segundo argumento, pero este runtime
+  // no lo pasa: prev llegaba undefined, `prev.screen` lanzaba y observe() no
+  // se ejecutaba nunca después del primer render. Como las secciones nacen
+  // con opacity: 0 y solo observe() les pone la clase que las revela, al
+  // volver al inicio desde cualquier otra pantalla la página se veía vacía:
+  // solo el encabezado. El runtime se tragaba el error en su console.error.
+  //
+  // Ya no depende del estado anterior: se reengancha en cada render y punto.
+  // Observar un elemento que ya se está observando no hace nada, así que
+  // llamarlo de más sale gratis.
+  componentDidUpdate() { this.observe(); }
   observe() {
-    if (this._io) this._io.disconnect();
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.1 });
-    setTimeout(() => document.querySelectorAll('.rv:not(.in)').forEach((el) => io.observe(el)), 30);
-    this._io = io;
+    if (!this._io) {
+      this._io = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); this._io.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+    }
+    // Ahora y otra vez a los 30ms: lo primero engancha lo que ya está en el
+    // DOM, lo segundo alcanza a lo que el runtime aún estuviera montando.
+    const enganchar = () => document.querySelectorAll('.rv:not(.in)').forEach((el) => this._io.observe(el));
+    enganchar();
+    setTimeout(enganchar, 30);
   }
   componentWillUnmount() {
     if (this._io) this._io.disconnect();
