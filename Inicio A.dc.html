@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff8dc; color: #241f16; font-family: "Figtree", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #8d7c26; text-decoration: none; }
+  a:hover { color: #6f6119; }
+  ::selection { background: #f7d0bc; }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .rv { opacity: 0; }
+  .rv.in { animation: rise .8s cubic-bezier(.16,.84,.3,1) forwards; }
+</style>
+</helmet>
+
+<div style="max-width: 1440px; margin: 0 auto; padding: 0 40px 0;">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0;">
+    <a href="#" style="display: flex; align-items: center; gap: 12px;">
+      <img src="assets/logo.png" alt="DecoCraft" style="width: 54px; height: 54px; border-radius: 999px; object-fit: cover; background: #fff8dc;">
+      <span style="font-family: 'Caprasimo', serif; font-size: 21px; color: #af9d36; letter-spacing: .01em;">DecoCraft</span>
+    </a>
+    <nav style="display: flex; align-items: center; gap: 30px; font-size: 15px; font-weight: 500;">
+      <a href="#catalogo" style="color: #241f16;">Catálogo</a>
+      <a href="#disenos" style="color: #241f16;">Diseños de cajón</a>
+      <a href="#personalizado" style="color: #241f16;">Personalizados</a>
+      <a href="#" style="color: #241f16;">Sobre mí</a>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button style="display: flex; align-items: center; gap: 9px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #241f16; font-family: inherit; font-size: 14px; font-weight: 600; padding: 11px 20px; border-radius: 999px; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">
+        Bolsa
+        <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 999px; background: #eaa93d; color: #fff8dc; font-size: 12px; font-weight: 700;">2</span>
+      </button>
+    </div>
+  </header>
+
+  <section style="display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding: 42px 0 72px;">
+    <div>
+      <span style="display: inline-block; padding: 8px 16px; border-radius: 999px; background: #f7d0bc; color: #8a5a3c; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;">Hecho a mano en pequeños lotes</span>
+      <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: 82px; line-height: .98; margin: 26px 0 0; color: #241f16; text-wrap: pretty;">Cosas bonitas,<br><span style="color: #af9d36;">hechas para ti</span></h1>
+      <p style="font-size: 19px; line-height: 1.6; color: #554c3a; max-width: 470px; margin: 24px 0 0;">Vasos, stickers, playeras y papelería creativa. Elige un diseño de cajón y llévatelo hoy, o pídelo con tu nombre, tu color y tu idea.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px;">
+        <a href="#disenos" style="background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#8d7c26;">Ver catálogo</a>
+        <a href="#personalizado" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 30px; border-radius: 999px;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Pedir algo personalizado</a>
+      </div>
+      <div style="display: flex; gap: 34px; margin-top: 46px; font-size: 14px; color: #6b6150;">
+        <span>Envíos a todo México</span>
+        <span>Pedidos desde 1 pieza</span>
+        <span>Listo en 3–5 días</span>
+      </div>
+    </div>
+    <div style="position: relative; aspect-ratio: 1 / 1;">
+      <div style="position: absolute; inset: 0; border-radius: 999px; background: #f7d0bc; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px); display: flex; align-items: center; justify-content: center;">
+          <span style="font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #8a5a3c; background: #fff8dc; padding: 8px 14px; border-radius: 999px;">foto principal</span>
+        </div>
+      </div>
+      <div style="position: absolute; top: -6px; right: 8px; width: 96px; height: 96px; animation: spin 26s linear infinite; color: #eaa93d;">
+        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;"><path d="M50 2 L57 43 L98 50 L57 57 L50 98 L43 57 L2 50 L43 43 Z" fill="currentColor"></path></svg>
+      </div>
+      <div style="position: absolute; bottom: 10px; left: -18px; background: #fff8dc; border-radius: 22px; padding: 16px 20px; box-shadow: 0 12px 32px rgba(46,43,37,.16); animation: float 6s ease-in-out infinite;">
+        <div style="font-family: 'Caprasimo', serif; font-size: 26px; color: #af9d36; line-height: 1;">+120</div>
+        <div style="font-size: 13px; color: #6b6150; margin-top: 4px;">diseños listos</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalogo" class="rv" style="padding: 8px 0 20px;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px;">
+      <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: 38px; margin: 0; color: #241f16;">Explora por categoría</h2>
+      <span style="font-size: 14px; color: #6b6150;">Arrastra para ver más →</span>
+    </div>
+    <div ref="{{ railRef }}" onMouseDown="{{ onDragStart }}" style="display: flex; gap: 18px; margin-top: 26px; overflow-x: auto; padding: 4px 4px 18px; scrollbar-width: none; cursor: grab;">
+      <sc-for list="{{ categorias }}" as="cat" hint-placeholder-count="6">
+        <a href="#disenos" style="flex: 0 0 232px; border-radius: 28px; overflow: hidden; background: #fff; box-shadow: 0 1px 2px rgba(46,43,37,.14);" style-hover="transform:translateY(-6px); box-shadow:0 12px 32px rgba(46,43,37,.18);">
+          <div style="height: 190px; background: {{ cat.tono }}; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px); display: flex; align-items: flex-end; padding: 14px;">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #554c3a; background: rgba(255,248,220,.9); padding: 6px 11px; border-radius: 999px;">{{ cat.slot }}</span>
+          </div>
+          <div style="padding: 18px 20px 20px;">
+            <div style="font-family: 'Caprasimo', serif; font-size: 21px; color: #241f16;">{{ cat.nombre }}</div>
+            <div style="font-size: 14px; color: #6b6150; margin-top: 5px;">{{ cat.piezas }}</div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="disenos" class="rv" style="padding: 54px 0 20px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #af9d36;">Diseños de cajón</span>
+        <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: 44px; margin: 12px 0 0; color: #241f16;">Elige, compra, listo</h2>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="4">
+          <span style="border: 1.5px solid rgba(36,31,22,.16); border-radius: 999px; padding: 9px 18px; font-size: 14px; font-weight: 600; color: #554c3a; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">{{ f }}</span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 32px;">
+      <sc-for list="{{ productos }}" as="p" hint-placeholder-count="8">
+        <div style="background: #fff; border-radius: 28px; overflow: hidden; box-shadow: 0 1px 2px rgba(46,43,37,.14); transition: transform .28s cubic-bezier(.16,.84,.3,1), box-shadow .28s;" style-hover="transform:translateY(-8px); box-shadow:0 12px 32px rgba(46,43,37,.2);">
+          <div style="position: relative; aspect-ratio: 4 / 5; background: {{ p.tono }}; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #554c3a; background: rgba(255,248,220,.92); padding: 6px 12px; border-radius: 999px;">{{ p.slot }}</span>
+            <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+              <span style="position: absolute; top: 14px; left: 14px; background: #eaa93d; color: #3a2a10; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px;">{{ p.badge }}</span>
+            </sc-if>
+          </div>
+          <div style="padding: 18px 20px 22px;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ p.cat }}</div>
+            <div style="font-family: 'Caprasimo', serif; font-size: 20px; color: #241f16; margin-top: 8px; line-height: 1.2;">{{ p.nombre }}</div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
+              <span style="font-size: 18px; font-weight: 700; color: #241f16;">{{ p.precio }}</span>
+              <button onClick="{{ addToCart }}" style="border: none; background: #af9d36; color: #fff8dc; font-family: inherit; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Agregar</button>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; justify-content: center; margin-top: 40px;">
+      <a href="#" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 34px; border-radius: 999px;" style-hover="background:#af9d36; color:#fff8dc;">Ver los 120 diseños</a>
+    </div>
+  </section>
+
+  <section id="personalizado" class="rv" style="margin: 72px 0 0; background: #af9d36; border-radius: 44px; padding: 60px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center;">
+    <div>
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fff8dc; opacity: .8;">Personalizados</span>
+      <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: 46px; line-height: 1.05; margin: 14px 0 0; color: #fff8dc;">Cuéntame tu idea por WhatsApp</h2>
+      <p style="font-size: 18px; line-height: 1.6; color: #fff8dc; opacity: .9; max-width: 460px; margin: 18px 0 0;">Mándame el nombre, la fecha o el diseño que traes en mente. Te comparto una propuesta y el precio el mismo día.</p>
+      <a href="#" style="display: inline-block; margin-top: 30px; background: #fff8dc; color: #6f6119; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#f7d0bc; color:#8a5a3c;">Escribirme por WhatsApp</a>
+    </div>
+    <div style="display: grid; gap: 14px;">
+      <sc-for list="{{ pasos }}" as="paso" hint-placeholder-count="3">
+        <div style="display: flex; align-items: center; gap: 16px; background: rgba(255,248,220,.16); border-radius: 22px; padding: 18px 22px;">
+          <span style="flex: 0 0 auto; width: 36px; height: 36px; border-radius: 999px; background: #fff8dc; color: #6f6119; font-family: 'Caprasimo', serif; font-size: 17px; display: flex; align-items: center; justify-content: center;">{{ paso.n }}</span>
+          <span style="color: #fff8dc; font-size: 16px; font-weight: 500;">{{ paso.t }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="overflow: hidden; margin: 46px 0 0; padding: 18px 0; border-top: 1.5px solid rgba(36,31,22,.12); border-bottom: 1.5px solid rgba(36,31,22,.12);">
+    <div style="display: flex; width: max-content; animation: slide 26s linear infinite; gap: 40px; font-family: 'Caprasimo', serif; font-size: 22px; color: #eaa93d; white-space: nowrap;">
+      <sc-for list="{{ ticker }}" as="t" hint-placeholder-count="12">
+        <span>{{ t }}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <footer style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; padding: 60px 0 70px;">
+    <div>
+      <img src="assets/logo.png" alt="DecoCraft" style="width: 60px; height: 60px; border-radius: 999px; object-fit: cover;">
+      <p style="font-size: 15px; line-height: 1.6; color: #6b6150; max-width: 260px; margin: 16px 0 0;">Papelería creativa y artículos personalizados, hechos de a poquito y con calma.</p>
+    </div>
+    <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+      <div>
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #241f16;">{{ col.titulo }}</div>
+        <div style="display: grid; gap: 10px; margin-top: 16px;">
+          <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+            <a href="#" style="font-size: 15px; color: #6b6150;">{{ l }}</a>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.railRef = React.createRef();
+  }
+  componentDidMount() {
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+    this._io = io;
+  }
+  componentWillUnmount() { if (this._io) this._io.disconnect(); }
+  onDragStart = (e) => {
+    const el = this.railRef.current;
+    if (!el) return;
+    const x0 = e.pageX, s0 = el.scrollLeft;
+    el.style.cursor = 'grabbing';
+    const move = (ev) => { el.scrollLeft = s0 - (ev.pageX - x0); };
+    const up = () => { el.style.cursor = 'grab'; window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+  renderVals() {
+    return {
+      railRef: this.railRef,
+      addToCart: () => {},
+      categorias: [
+        { nombre: 'Vasos y termos', piezas: '32 diseños', tono: '#f7d0bc', slot: 'vaso' },
+        { nombre: 'Stickers', piezas: '48 diseños', tono: '#eaa93d', slot: 'sticker sheet' },
+        { nombre: 'Papelería creativa', piezas: '26 diseños', tono: '#f7d0bc', slot: 'set papelería' },
+        { nombre: 'Playeras', piezas: '18 diseños', tono: '#e8dfae', slot: 'playera' },
+        { nombre: 'Agendas y planners', piezas: '12 diseños', tono: '#eaa93d', slot: 'agenda' },
+        { nombre: 'Otros', piezas: 'llaveros, imanes…', tono: '#e8dfae', slot: 'varios' }
+      ],
+      filtros: ['Todo', 'Nuevo', 'Más vendido', 'Menos de $150'],
+      productos: [
+        { nombre: 'Vaso escarchado flores', cat: 'Vasos', precio: '$260', tono: '#f7d0bc', slot: 'vaso escarchado', badge: 'Nuevo' },
+        { nombre: 'Hoja de stickers frases', cat: 'Stickers', precio: '$85', tono: '#eaa93d', slot: 'stickers frases', badge: '' },
+        { nombre: 'Playera bordada inicial', cat: 'Playeras', precio: '$340', tono: '#e8dfae', slot: 'playera inicial', badge: 'Más vendido' },
+        { nombre: 'Agenda 2027 pastel', cat: 'Agendas', precio: '$290', tono: '#f7d0bc', slot: 'agenda pastel', badge: '' },
+        { nombre: 'Set de notas adhesivas', cat: 'Papelería', precio: '$120', tono: '#e8dfae', slot: 'notas', badge: '' },
+        { nombre: 'Termo 600ml con nombre', cat: 'Termos', precio: '$420', tono: '#eaa93d', slot: 'termo', badge: '' },
+        { nombre: 'Stickers troquelados mini', cat: 'Stickers', precio: '$65', tono: '#f7d0bc', slot: 'stickers mini', badge: '' },
+        { nombre: 'Libreta cosida a mano', cat: 'Papelería', precio: '$180', tono: '#e8dfae', slot: 'libreta', badge: 'Nuevo' }
+      ],
+      pasos: [
+        { n: '1', t: 'Me escribes con tu idea y para cuándo la necesitas' },
+        { n: '2', t: 'Te mando el diseño y el precio, ajustamos detalles' },
+        { n: '3', t: 'Apruebas, produzco y te llega a casa' }
+      ],
+      ticker: ['vasos', '✳', 'stickers', '✳', 'playeras', '✳', 'papelería', '✳', 'agendas', '✳', 'vasos', '✳', 'stickers', '✳', 'playeras', '✳', 'papelería', '✳', 'agendas', '✳'],
+      footerCols: [
+        { titulo: 'Tienda', links: ['Diseños de cajón', 'Novedades', 'Más vendidos', 'Tarjeta de regalo'] },
+        { titulo: 'Ayuda', links: ['Envíos y tiempos', 'Cambios', 'Preguntas frecuentes', 'Contacto'] },
+        { titulo: 'Sígueme', links: ['Instagram', 'TikTok', 'Pinterest', 'WhatsApp'] }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

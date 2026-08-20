@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&amp;family=Figtree:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff8dc; color: #241f16; font-family: "Figtree", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #8d7c26; text-decoration: none; cursor: pointer; }
+  a:hover { color: #6f6119; }
+  ::selection { background: #f7d0bc; }
+  input, textarea, select, button { font-family: inherit; }
+  :focus-visible { outline: 2px solid #af9d36; outline-offset: 2px; }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes caer { from { transform: translate3d(0, -12vh, 0); } to { transform: translate3d(0, 108vh, 0); } }
+  @keyframes vaiven { 0% { transform: translateX(-26px) rotate(-40deg); } 100% { transform: translateX(26px) rotate(320deg); } }
+  @media (prefers-reduced-motion: reduce) { #hojas { display: none; } }
+  .rv { opacity: 0; }
+  .rv.in { animation: rise .8s cubic-bezier(.16,.84,.3,1) forwards; }
+</style>
+</helmet>
+
+<div style="max-width: 1440px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px);">
+
+  <sc-if value="{{ hojas }}" hint-placeholder-val="{{ true }}">
+    <div id="hojas" aria-hidden="true" style="position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 6%; animation: caer 11s linear .2s 1 both;"><div style="width: 13px; height: 13px; border-radius: 0 100% 0 100%; background: #eaa93d; opacity: .75; animation: vaiven 3.4s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 17%; animation: caer 14s linear 1.6s 1 both;"><div style="width: 10px; height: 10px; border-radius: 0 100% 0 100%; background: #af9d36; opacity: .7; animation: vaiven 4.1s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 29%; animation: caer 9.5s linear .9s 1 both;"><div style="width: 15px; height: 15px; border-radius: 0 100% 0 100%; background: #f7d0bc; opacity: .85; animation: vaiven 2.9s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 41%; animation: caer 13s linear 3.4s 1 both;"><div style="width: 11px; height: 11px; border-radius: 0 100% 0 100%; background: #c67139; opacity: .6; animation: vaiven 3.7s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 53%; animation: caer 10.5s linear 2.2s 1 both;"><div style="width: 14px; height: 14px; border-radius: 0 100% 0 100%; background: #eaa93d; opacity: .7; animation: vaiven 3.2s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 64%; animation: caer 15s linear 5.1s 1 both;"><div style="width: 10px; height: 10px; border-radius: 0 100% 0 100%; background: #af9d36; opacity: .65; animation: vaiven 4.4s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 76%; animation: caer 12s linear 1.1s 1 both;"><div style="width: 12px; height: 12px; border-radius: 0 100% 0 100%; background: #f7d0bc; opacity: .8; animation: vaiven 3.5s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 88%; animation: caer 10s linear 4.2s 1 both;"><div style="width: 13px; height: 13px; border-radius: 0 100% 0 100%; background: #eaa93d; opacity: .7; animation: vaiven 3s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 34%; animation: caer 13.5s linear 6.8s 1 both;"><div style="width: 11px; height: 11px; border-radius: 0 100% 0 100%; background: #c67139; opacity: .55; animation: vaiven 4s ease-in-out infinite alternate;"></div></div>
+      <div style="position: absolute; top: 0; left: 70%; animation: caer 11.5s linear 8s 1 both;"><div style="width: 12px; height: 12px; border-radius: 0 100% 0 100%; background: #af9d36; opacity: .6; animation: vaiven 3.3s ease-in-out infinite alternate;"></div></div>
+    </div>
+  </sc-if>
+
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: clamp(14px, 2vw, 22px) 0; position: sticky; top: 0; background: #fff8dc; z-index: 30;">
+    <a onClick="{{ irInicio }}" style="display: flex; align-items: center; gap: 12px;">
+      <img src="assets/logo.png" alt="DecoCraft" style="width: 54px; height: 54px; object-fit: contain;">
+      <span style="font-family: 'Caprasimo', serif; font-size: 21px; color: #af9d36;">DecoCraft</span>
+    </a>
+    <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; font-weight: 700;">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+        <a onClick="{{ n.go }}" style="color: #241f16; padding: 10px 16px; border-radius: 999px;" style-hover="background:#f7d0bc; color:#8a5a3c;">{{ n.label }}</a>
+      </sc-for>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button onClick="{{ irAdmin }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#e8dfae; border-color:#e8dfae;">Mi panel</button>
+      <button onClick="{{ irCarrito }}" style="display: flex; align-items: center; gap: 9px; border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 12px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">
+        Bolsa
+        <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 999px; background: #fff8dc; color: #6f6119; font-size: 12px; font-weight: 700;">{{ totalPiezas }}</span>
+      </button>
+    </div>
+  </header>
+
+  <sc-if value="{{ esInicio }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: clamp(32px, 4vw, 56px); align-items: center; padding: clamp(24px, 4vw, 42px) 0 clamp(48px, 6vw, 72px);">
+        <div>
+          <span style="display: inline-block; padding: 8px 16px; border-radius: 999px; background: #f7d0bc; color: #8a5a3c; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;">Hecho a mano, con mucho amor</span>
+          <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(44px, 8.5vw, 82px); line-height: .98; margin: 26px 0 0; text-wrap: pretty; color: #C68539">Cosas bonitas,<br><span style="color: #af9d36;">hechas para ti</span></h1>
+          <p style="font-size: 19px; line-height: 1.6; color: #554c3a; max-width: 470px; margin: 24px 0 0;">Vasos, stickers, playeras y papelería creativa. Elige tu diseño favorito y llévatelo hoy, o pídelo 100% personalizado.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px;">
+            <a onClick="{{ irCatalogo }}" style="background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#8d7c26; color:#fff8dc;">Ver catálogo</a>
+            <a onClick="{{ irPersonalizar }}" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 30px; border-radius: 999px;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Pedir algo personalizado</a>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px 34px; margin-top: 46px; font-size: 14px; color: #6b6150;">
+            <span>Envíos a todo México</span>
+            <span>Pedidos desde 1 pieza</span>
+            <span>Listo en 4–6 días hábiles</span>
+          </div>
+        </div>
+        <div style="position: relative; aspect-ratio: 1 / 1;">
+          <div style="position: absolute; inset: 0; border-radius: 999px; background: #f7d0bc; overflow: hidden;">
+            <img src="https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172047_1e285194-b27c-498d-afd7-2540db8192fb.png" alt="Artículos personalizados DecoCraft" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.9) contrast(.96);">
+          </div>
+          <div style="position: absolute; top: -6px; right: 8px; width: 96px; height: 96px; animation: spin 26s linear infinite; color: #eaa93d;">
+            <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;"><path d="M50 2 L57 43 L98 50 L57 57 L50 98 L43 57 L2 50 L43 43 Z" fill="currentColor"></path></svg>
+          </div>
+          <div style="position: absolute; bottom: 10px; left: -18px; background: #fff8dc; border-radius: 22px; padding: 16px 20px; box-shadow: 0 12px 32px rgba(46,43,37,.16); animation: float 6s ease-in-out infinite;">
+            <div style="font-family: 'Caprasimo', serif; font-size: 26px; color: #af9d36; line-height: 1;">{{ conteoProductos }}</div>
+            <div style="font-size: 13px; color: #6b6150; margin-top: 4px;">diseños listos</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="rv" style="padding: 8px 0 20px;">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px;">
+          <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(28px, 4.5vw, 38px); margin: 0;">Explora por categoría</h2>
+          <span style="font-size: 14px; color: #6b6150;">Arrastra para ver más →</span>
+        </div>
+        <div ref="{{ railRef }}" onMouseDown="{{ onDragStart }}" style="display: flex; gap: 18px; margin-top: 26px; overflow-x: auto; padding: 4px 4px 18px; scrollbar-width: none; cursor: grab;">
+          <sc-for list="{{ categoriasHome }}" as="cat" hint-placeholder-count="6">
+            <a onClick="{{ cat.abrir }}" style="flex: 0 0 232px; border-radius: 28px; overflow: hidden; background: #fff; box-shadow: 0 1px 2px rgba(46,43,37,.14); transition: transform .28s cubic-bezier(.16,.84,.3,1), box-shadow .28s;" style-hover="transform:translateY(-6px); box-shadow:0 12px 32px rgba(46,43,37,.18);">
+              <div style="position: relative; height: 190px; background: {{ cat.tono }}; overflow: hidden;">
+                <img src="{{ cat.img }}" alt="{{ cat.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.9) contrast(.96);">
+              </div>
+              <div style="padding: 18px 20px 20px;">
+                <div style="font-family: 'Caprasimo', serif; font-size: 21px; color: #241f16;">{{ cat.nombre }}</div>
+                <div style="font-size: 14px; color: #6b6150; margin-top: 5px;">{{ cat.piezas }}</div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="rv" style="padding: 54px 0 20px;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+          <div>
+            <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #af9d36;">Vasos personalizados</span>
+            <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(30px, 5vw, 44px); margin: 12px 0 0;">Elige, compra, listo</h2>
+          </div>
+          <a onClick="{{ irCatalogo }}" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px;" style-hover="background:#af9d36; color:#fff8dc;">Ver todo el catálogo</a>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 24px; margin-top: 32px;">
+          <sc-for list="{{ destacados }}" as="p" hint-placeholder-count="8">
+            <div style="background: #fff; border-radius: 28px; overflow: hidden; box-shadow: 0 1px 2px rgba(46,43,37,.14); transition: transform .28s cubic-bezier(.16,.84,.3,1), box-shadow .28s;" style-hover="transform:translateY(-8px); box-shadow:0 12px 32px rgba(46,43,37,.2);">
+              <div onClick="{{ p.abrir }}" style="position: relative; aspect-ratio: 4 / 5; background: {{ p.tono }}; cursor: pointer; overflow: hidden;">
+                <sc-if value="{{ p.tieneImg }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ p.img }}" alt="{{ p.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </sc-if>
+                <sc-if value="{{ p.sinImg }}" hint-placeholder-val="{{ true }}">
+                  <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px); display: flex; align-items: center; justify-content: center;">
+                    <span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #554c3a; background: rgba(255,248,220,.92); padding: 6px 12px; border-radius: 999px;">{{ p.slot }}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+                  <span style="position: absolute; top: 14px; left: 14px; background: #eaa93d; color: #3a2a10; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px;">{{ p.badge }}</span>
+                </sc-if>
+              </div>
+              <div style="padding: 18px 20px 22px;">
+                <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ p.categoria }}</div>
+                <div onClick="{{ p.abrir }}" style="font-family: 'Caprasimo', serif; font-size: 20px; margin-top: 8px; line-height: 1.2; cursor: pointer;">{{ p.nombre }}</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
+                  <span style="font-size: 18px; font-weight: 700;">{{ p.precioFmt }}</span>
+                  <button onClick="{{ p.agregar }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">{{ p.textoAgregar }}</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="rv" style="margin: 72px 0 0; background: #af9d36; border-radius: clamp(28px, 4vw, 44px); padding: clamp(28px, 4.5vw, 60px); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(28px, 4vw, 48px); align-items: center;">
+        <div>
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fff8dc; opacity: .8;">Personalizados por ti</span>
+          <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(30px, 5vw, 46px); line-height: 1.05; margin: 14px 0 0; color: #fff8dc;">Cuéntame tu idea por WhatsApp</h2>
+          <p style="font-size: 18px; line-height: 1.6; color: #fff8dc; opacity: .9; max-width: 460px; margin: 18px 0 0;">Mándame el nombre, la fecha o el diseño que traes en mente. Te comparto una propuesta y el precio el mismo día.</p>
+          <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 30px;">
+            <a onClick="{{ irPersonalizar }}" style="background: #fff8dc; color: #6f6119; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#f7d0bc; color:#8a5a3c;">Ver opciones y precios</a>
+            <a href="{{ waLink }}" target="_blank" style="color: #fff8dc; font-size: 15px; font-weight: 600; text-decoration: underline;" style-hover="color:#f7d0bc;">o escríbeme por WhatsApp</a>
+          </div>
+        </div>
+        <div style="display: grid; gap: 14px;">
+          <sc-for list="{{ pasos }}" as="paso" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 16px; background: rgba(255,248,220,.16); border-radius: 22px; padding: 18px 22px;">
+              <span style="flex: 0 0 auto; width: 36px; height: 36px; border-radius: 999px; background: #fff8dc; color: #6f6119; font-family: 'Caprasimo', serif; font-size: 17px; display: flex; align-items: center; justify-content: center;">{{ paso.n }}</span>
+              <span style="color: #fff8dc; font-size: 16px; font-weight: 500;">{{ paso.t }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="rv" style="padding: 84px 0 0;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+          <div>
+            <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #af9d36;">Clientes felices</span>
+            <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(30px, 5vw, 44px); margin: 12px 0 0;">Lo que dicen de mis piezas</h2>
+          </div>
+          <div style="display: flex; align-items: center; gap: 18px;">
+            <div style="display: flex; align-items: center; gap: 10px; background: #e8dfae; border-radius: 999px; padding: 11px 20px;">
+              <span style="color: #eaa93d; font-size: 16px; letter-spacing: 2px;">★★★★★</span>
+              <span style="font-size: 14px; font-weight: 700; color: #6f6119;">{{ ratingPromedio }} · {{ totalReviews }} reseñas</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button onClick="{{ reviewAnterior }}" style="width: 46px; height: 46px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 18px; color: #241f16; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">←</button>
+              <button onClick="{{ reviewSiguiente }}" style="width: 46px; height: 46px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 18px; color: #241f16; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">→</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="overflow: hidden; margin-top: 32px;">
+          <div style="display: flex; gap: 24px; transition: transform .6s cubic-bezier(.16,.84,.3,1); transform: {{ reviewTransform }};">
+            <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="5">
+              <div style="flex: 0 0 max(272px, calc((100% - 48px) / 3)); background: #fff; border-radius: 30px; padding: 26px; box-shadow: 0 1px 2px rgba(46,43,37,.14); transition: transform .28s cubic-bezier(.16,.84,.3,1), box-shadow .28s;" style-hover="transform:translateY(-6px); box-shadow:0 14px 32px rgba(46,43,37,.18);">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div style="width: 58px; height: 58px; border-radius: 999px; overflow: hidden; background: #f7d0bc; flex: 0 0 auto;">
+                    <img src="{{ r.foto }}" alt="{{ r.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.92) contrast(.97);">
+                  </div>
+                  <div>
+                    <div style="font-weight: 700; font-size: 16px;">{{ r.nombre }}</div>
+                    <div style="font-size: 13px; color: #6b6150; margin-top: 2px;">{{ r.lugar }}</div>
+                  </div>
+                </div>
+                <div style="color: #eaa93d; font-size: 15px; letter-spacing: 2px; margin-top: 18px;">{{ r.estrellas }}</div>
+                <p style="font-size: 16px; line-height: 1.6; color: #3f382b; margin: 12px 0 0;">{{ r.texto }}</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1.5px solid rgba(36,31,22,.1);">
+                  <span style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ r.compra }}</span>
+                  <span style="font-size: 13px; color: #6b6150;">{{ r.fecha }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 9px; margin-top: 26px;">
+          <sc-for list="{{ reviewDots }}" as="d" hint-placeholder-count="3">
+            <button onClick="{{ d.ir }}" style="width: {{ d.ancho }}; height: 9px; border-radius: 999px; border: none; background: {{ d.color }}; cursor: pointer; padding: 0; transition: width .3s, background .3s;"></button>
+          </sc-for>
+        </div>
+      </section>
+
+      <sc-if value="{{ mostrarTicker }}" hint-placeholder-val="{{ true }}">
+        <div style="overflow: hidden; margin: 46px 0 0; padding: 18px 0; border-top: 1.5px solid rgba(36,31,22,.12); border-bottom: 1.5px solid rgba(36,31,22,.12);">
+          <div style="display: flex; width: max-content; animation: slide 26s linear infinite; gap: 40px; font-family: 'Caprasimo', serif; font-size: 22px; color: #eaa93d; white-space: nowrap;">
+            <sc-for list="{{ ticker }}" as="t" hint-placeholder-count="12">
+              <span>{{ t }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ esCatalogo }}" hint-placeholder-val="{{ false }}">
+    <section style="padding: 24px 0 40px;">
+      <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(38px, 7vw, 58px); margin: 0;">Catálogo</h1>
+      <p style="font-size: 17px; color: #6b6150; margin: 12px 0 0;">{{ resumenCatalogo }}</p>
+      <div style="display: grid; display: flex; flex-wrap: wrap; gap: clamp(24px, 3vw, 40px); margin-top: 36px; align-items: flex-start;">
+        <aside style="flex: 1 1 230px; max-width: 300px; position: sticky; top: 110px; display: grid; gap: 26px;">
+          <div>
+            <input value="{{ busqueda }}" onChange="{{ onBuscar }}" placeholder="Buscar producto" style="width: 100%; border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 13px 20px; font-size: 15px; color: #241f16;">
+          </div>
+          <div>
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Categoría</div>
+            <div style="display: grid; gap: 6px; margin-top: 14px;">
+              <sc-for list="{{ filtrosCat }}" as="f" hint-placeholder-count="7">
+                <a onClick="{{ f.elegir }}" style="display: flex; justify-content: space-between; gap: 10px; font-size: 15px; font-weight: 600; padding: 10px 16px; border-radius: 999px; background: {{ f.fondo }}; color: {{ f.color }};" style-hover="background:#f7d0bc; color:#8a5a3c;">
+                  <span>{{ f.nombre }}</span>
+                  <span style="opacity: .6;">{{ f.n }}</span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background: #f7d0bc; border-radius: 26px; padding: 22px;">
+            <div style="font-family: 'Caprasimo', serif; font-size: 20px; color: #8a5a3c; line-height: 1.15;">¿No encuentras lo que buscas?</div>
+            <p style="font-size: 14px; color: #7a4f34; line-height: 1.5; margin: 10px 0 16px;">Lo hago a tu medida. Escríbeme y lo vemos.</p>
+            <a href="{{ waLink }}" target="_blank" style="display: inline-block; background: #fff8dc; color: #8a5a3c; font-size: 14px; font-weight: 700; padding: 12px 20px; border-radius: 999px;" style-hover="background:#eaa93d; color:#4a3512;">WhatsApp</a>
+          </div>
+        </aside>
+        <div style="flex: 999 1 440px; min-width: 0;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 26px;">
+            <sc-for list="{{ productosFiltrados }}" as="p" hint-placeholder-count="9">
+              <div style="background: #fff; border-radius: 28px; overflow: hidden; box-shadow: 0 1px 2px rgba(46,43,37,.14); transition: transform .28s cubic-bezier(.16,.84,.3,1), box-shadow .28s;" style-hover="transform:translateY(-8px); box-shadow:0 12px 32px rgba(46,43,37,.2);">
+                <div onClick="{{ p.abrir }}" style="position: relative; aspect-ratio: 1 / 1; background: {{ p.tono }}; cursor: pointer; overflow: hidden;">
+                  <sc-if value="{{ p.tieneImg }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ p.img }}" alt="{{ p.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </sc-if>
+                  <sc-if value="{{ p.sinImg }}" hint-placeholder-val="{{ true }}">
+                    <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px); display: flex; align-items: center; justify-content: center;">
+                      <span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: #554c3a; background: rgba(255,248,220,.92); padding: 6px 12px; border-radius: 999px;">{{ p.slot }}</span>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ true }}">
+                    <span style="position: absolute; top: 14px; left: 14px; background: #eaa93d; color: #3a2a10; font-size: 12px; font-weight: 700; padding: 7px 13px; border-radius: 999px;">{{ p.badge }}</span>
+                  </sc-if>
+                </div>
+                <div style="padding: 18px 20px 22px;">
+                  <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ p.categoria }}</div>
+                  <div onClick="{{ p.abrir }}" style="font-family: 'Caprasimo', serif; font-size: 20px; margin-top: 8px; line-height: 1.2; cursor: pointer;">{{ p.nombre }}</div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
+                    <span style="font-size: 18px; font-weight: 700;">{{ p.precioFmt }}</span>
+                    <button onClick="{{ p.agregar }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">{{ p.textoAgregar }}</button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ catalogoVacio }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align: center; padding: 80px 0; color: #6b6150; font-size: 17px;">Nada por aquí todavía. Prueba otra categoría o sube un producto desde tu panel.</div>
+          </sc-if>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ esProducto }}" hint-placeholder-val="{{ false }}">
+    <section style="padding: 20px 0 60px;">
+      <a onClick="{{ irCatalogo }}" style="font-size: 15px; font-weight: 600;">← Volver al catálogo</a>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(28px, 4vw, 56px); margin-top: 26px; align-items: start;">
+        <div style="position: relative; aspect-ratio: 1 / 1; border-radius: 36px; overflow: hidden; background: {{ activoTono }};">
+          <sc-if value="{{ activoTieneImg }}" hint-placeholder-val="{{ false }}">
+            <img src="{{ activoImg }}" alt="{{ activoNombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          </sc-if>
+          <sc-if value="{{ activoSinImg }}" hint-placeholder-val="{{ true }}">
+            <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px); display: flex; align-items: center; justify-content: center;">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #554c3a; background: rgba(255,248,220,.92); padding: 8px 14px; border-radius: 999px;">{{ activoSlot }}</span>
+            </div>
+          </sc-if>
+        </div>
+        <div>
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #af9d36;">{{ activoCategoria }}</span>
+          <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(34px, 5.5vw, 50px); line-height: 1.05; margin: 12px 0 0;">{{ activoNombre }}</h1>
+          <div style="font-size: 30px; font-weight: 700; margin-top: 18px;">{{ activoPrecioFmt }}</div>
+          <p style="font-size: 17px; line-height: 1.65; color: #554c3a; margin: 18px 0 0; max-width: 480px;">{{ activoDesc }}</p>
+
+          <sc-if value="{{ activoEsPlayera }}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; gap: 22px; margin-top: 30px;">
+              <div>
+                <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Corte</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+                  <sc-for list="{{ cortes }}" as="c" hint-placeholder-count="2">
+                    <button onClick="{{ c.elegir }}" style="border: 1.5px solid {{ c.borde }}; background: {{ c.fondo }}; color: {{ c.color }}; font-size: 15px; font-weight: 600; padding: 13px 22px; border-radius: 999px; cursor: pointer;">{{ c.nombre }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Talla</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+                  <sc-for list="{{ tallas }}" as="t" hint-placeholder-count="6">
+                    <button onClick="{{ t.elegir }}" style="min-width: 56px; border: 1.5px solid {{ t.borde }}; background: {{ t.fondo }}; color: {{ t.color }}; font-size: 15px; font-weight: 700; padding: 13px 16px; border-radius: 999px; cursor: pointer;">{{ t.nombre }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ activoEsVaso }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 30px;">
+              <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Presentación</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+                <sc-for list="{{ vasoOpciones }}" as="v" hint-placeholder-count="2">
+                  <button onClick="{{ v.elegir }}" style="border: 1.5px solid {{ v.borde }}; background: {{ v.fondo }}; color: {{ v.color }}; font-size: 15px; font-weight: 600; padding: 13px 22px; border-radius: 999px; cursor: pointer;">{{ v.nombre }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="margin-top: 30px;">
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Cantidad</div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-top: 12px;">
+              <button onClick="{{ menosCantidad }}" style="width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 20px; color: #241f16; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">−</button>
+              <span style="font-size: 19px; font-weight: 700; min-width: 26px; text-align: center;">{{ cantidad }}</span>
+              <button onClick="{{ masCantidad }}" style="width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 20px; color: #241f16; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">+</button>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px;">
+            <button onClick="{{ agregarActivo }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 34px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Agregar a la bolsa</button>
+            <a href="{{ waLinkProducto }}" target="_blank" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 30px; border-radius: 999px;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Lo quiero personalizado</a>
+          </div>
+
+          <div style="display: grid; gap: 12px; margin-top: 36px; border-top: 1.5px solid rgba(36,31,22,.12); padding-top: 26px;">
+            <sc-for list="{{ detallesProducto }}" as="d" hint-placeholder-count="3">
+              <div style="display: flex; justify-content: space-between; gap: 20px; font-size: 15px;">
+                <span style="color: #6b6150;">{{ d.k }}</span>
+                <span style="font-weight: 600; color: #241f16;">{{ d.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ esCarrito }}" hint-placeholder-val="{{ false }}">
+    <section style="padding: 24px 0 80px;">
+      <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(38px, 7vw, 56px); margin: 0;">Tu bolsa</h1>
+      <sc-if value="{{ carritoVacio }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 40px; background: #fff; border-radius: 32px; padding: 60px; text-align: center;">
+          <p style="font-size: 18px; color: #6b6150; margin: 0 0 24px;">Todavía no hay nada aquí.</p>
+          <a onClick="{{ irCatalogo }}" style="display: inline-block; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 16px 32px; border-radius: 999px;" style-hover="background:#8d7c26; color:#fff8dc;">Ver el catálogo</a>
+        </div>
+      </sc-if>
+      <sc-if value="{{ carritoConItems }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; display: flex; flex-wrap: wrap; gap: clamp(24px, 3vw, 40px); margin-top: 32px; align-items: flex-start;">
+          <div style="flex: 999 1 420px; min-width: 0; display: grid; gap: 16px;">
+            <sc-for list="{{ carritoItems }}" as="it" hint-placeholder-count="2">
+              <div style="display: flex; flex-wrap: wrap; gap: 18px 22px; align-items: center; background: #fff; border-radius: 28px; padding: 18px;">
+                <div style="position: relative; width: 108px; height: 108px; border-radius: 20px; overflow: hidden; background: {{ it.tono }};">
+                  <sc-if value="{{ it.tieneImg }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ it.img }}" alt="{{ it.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </sc-if>
+                  <sc-if value="{{ it.sinImg }}" hint-placeholder-val="{{ true }}">
+                    <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px);"></div>
+                  </sc-if>
+                </div>
+                <div style="flex: 1 1 200px; min-width: 0;">
+                  <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ it.categoria }}</div>
+                  <div style="font-family: 'Caprasimo', serif; font-size: 21px; margin-top: 6px;">{{ it.nombre }}</div>
+                  <sc-if value="{{ it.tieneOpciones }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size: 14px; color: #6b6150; margin-top: 4px;">{{ it.opciones }}</div>
+                  </sc-if>
+                  <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
+                    <button onClick="{{ it.menos }}" style="width: 34px; height: 34px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 17px; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">−</button>
+                    <span style="font-size: 16px; font-weight: 700; min-width: 20px; text-align: center;">{{ it.qty }}</span>
+                    <button onClick="{{ it.mas }}" style="width: 34px; height: 34px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 17px; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">+</button>
+                    <a onClick="{{ it.quitar }}" style="font-size: 14px; color: #6b6150; margin-left: 8px;">Quitar</a>
+                  </div>
+                </div>
+                <div style="font-size: 19px; font-weight: 700; padding-right: 8px;">{{ it.subtotalFmt }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background: #fff8dc; border: 1.5px solid rgba(36,31,22,.14); border-radius: 32px; padding: 30px; flex: 1 1 280px; position: sticky; top: 110px;">
+            <div style="font-family: 'Caprasimo', serif; font-size: 26px;">Resumen</div>
+            <div style="display: grid; gap: 12px; margin-top: 22px; font-size: 16px;">
+              <div style="display: flex; justify-content: space-between;"><span style="color: #6b6150;">Productos</span><span style="font-weight: 600;">{{ subtotalFmt }}</span></div>
+              <div style="display: flex; justify-content: space-between;"><span style="color: #6b6150;">Envío</span><span style="font-weight: 600;">{{ envioFmt }}</span></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 22px; padding-top: 20px; border-top: 1.5px solid rgba(36,31,22,.14);">
+              <span style="font-size: 17px; font-weight: 600;">Total</span>
+              <span style="font-family: 'Caprasimo', serif; font-size: 30px;">{{ totalFmt }}</span>
+            </div>
+            <p style="font-size: 13px; color: #6b6150; line-height: 1.5; margin: 14px 0 0;">{{ notaEnvio }}</p>
+            <button onClick="{{ pagarCarrito }}" style="width: 100%; margin-top: 22px; border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Pagar</button>
+            <a href="{{ waLink }}" target="_blank" style="display: block; text-align: center; margin-top: 14px; font-size: 14px; color: #6b6150;">o pedir por WhatsApp</a>
+          </div>
+        </div>
+      </sc-if>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ esAdmin }}" hint-placeholder-val="{{ false }}">
+    <section style="padding: 24px 0 80px;">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+        <div>
+          <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #af9d36;">Solo tú ves esto</span>
+          <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(34px, 6vw, 52px); margin: 10px 0 0;">Mis productos</h1>
+          <p style="font-size: 16px; color: #6b6150; margin: 10px 0 0;">Sube, edita o quita productos. Los cambios se ven de inmediato en la tienda.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button onClick="{{ nuevoProducto }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 15px; font-weight: 700; padding: 14px 26px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Nuevo producto</button>
+        </div>
+      </div>
+
+      <div style="display: grid; display: flex; flex-wrap: wrap; gap: clamp(24px, 3vw, 36px); margin-top: 36px; align-items: flex-start;">
+        <div style="flex: 999 1 460px; min-width: 0; background: #fff; border-radius: 30px; padding: 8px 8px;">
+          <sc-for list="{{ adminLista }}" as="a" hint-placeholder-count="6">
+            <div style="display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; padding: 14px 18px; border-bottom: 1.5px solid rgba(36,31,22,.08);">
+              <div style="position: relative; width: 64px; height: 64px; border-radius: 16px; overflow: hidden; background: {{ a.tono }};">
+                <sc-if value="{{ a.tieneImg }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ a.img }}" alt="{{ a.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </sc-if>
+                <sc-if value="{{ a.sinImg }}" hint-placeholder-val="{{ true }}">
+                  <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.05) 0 9px, transparent 9px 18px);"></div>
+                </sc-if>
+              </div>
+              <div style="flex: 1 1 180px; min-width: 0;">
+                <div style="font-weight: 700; font-size: 16px;">{{ a.nombre }}</div>
+                <div style="font-size: 13px; color: #6b6150; margin-top: 3px;">{{ a.categoria }}</div>
+              </div>
+              <div style="font-size: 16px; font-weight: 700;">{{ a.precioFmt }}</div>
+              <div>
+                <span style="font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: {{ a.estadoFondo }}; color: {{ a.estadoColor }};">{{ a.estado }}</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button onClick="{{ a.editar }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 999px; cursor: pointer; color: #241f16;" style-hover="background:#e8dfae; border-color:#e8dfae;">Editar</button>
+                <button onClick="{{ a.borrar }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 999px; cursor: pointer; color: #8a5a3c;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">Borrar</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background: #fff8dc; border: 1.5px solid rgba(36,31,22,.14); border-radius: 30px; padding: 28px; flex: 1 1 320px; position: sticky; top: 110px;">
+          <div style="font-family: 'Caprasimo', serif; font-size: 24px;">{{ tituloForm }}</div>
+          <div style="display: grid; gap: 16px; margin-top: 22px;">
+            <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Nombre
+              <input value="{{ formNombre }}" onChange="{{ onFormNombre }}" placeholder="Vaso escarchado flores" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
+            </label>
+            <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Categoría
+              <select value="{{ formCategoria }}" onChange="{{ onFormCategoria }}" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
+                <sc-for list="{{ categoriasBase }}" as="c" hint-placeholder-count="6">
+                  <option value="{{ c }}">{{ c }}</option>
+                </sc-for>
+              </select>
+            </label>
+            <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Precio (MXN)
+              <input value="{{ formPrecio }}" onChange="{{ onFormPrecio }}" placeholder="260" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
+            </label>
+            <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Descripción
+              <textarea value="{{ formDesc }}" onChange="{{ onFormDesc }}" rows="3" placeholder="Vidrio de 500ml, escarchado a mano." style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 20px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16; resize: vertical;"></textarea>
+            </label>
+            <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Etiqueta (opcional)
+              <input value="{{ formBadge }}" onChange="{{ onFormBadge }}" placeholder="Nuevo" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
+            </label>
+            <div style="display: grid; gap: 9px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Foto
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="position: relative; width: 76px; height: 76px; border-radius: 18px; overflow: hidden; background: #f7d0bc; flex: 0 0 auto;">
+                  <sc-if value="{{ formTieneImg }}" hint-placeholder-val="{{ false }}">
+                    <img src="{{ formImg }}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  </sc-if>
+                  <sc-if value="{{ formSinImg }}" hint-placeholder-val="{{ true }}">
+                    <div style="position: absolute; inset: 0; background-image: repeating-linear-gradient(115deg, rgba(36,31,22,.06) 0 9px, transparent 9px 18px);"></div>
+                  </sc-if>
+                </div>
+                <label style="border: 1.5px solid rgba(36,31,22,.16); border-radius: 999px; padding: 11px 20px; font-size: 14px; font-weight: 600; cursor: pointer; color: #241f16;" style-hover="background:#e8dfae; border-color:#e8dfae;">
+                  Subir imagen
+                  <input type="file" accept="image/*" onChange="{{ onFormImagen }}" style="display: none;">
+                </label>
+              </div>
+            </div>
+            <label style="display: flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 600; color: #554c3a;">
+              <input type="checkbox" checked="{{ formActivo }}" onChange="{{ onFormActivo }}" style="width: 18px; height: 18px; accent-color: #af9d36;">
+              Publicado en la tienda
+            </label>
+            <div style="display: flex; gap: 10px; margin-top: 6px;">
+              <button onClick="{{ guardarProducto }}" style="flex: 1; border: none; background: #af9d36; color: #fff8dc; font-size: 15px; font-weight: 700; padding: 15px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Guardar</button>
+              <button onClick="{{ nuevoProducto }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 15px; font-weight: 600; padding: 15px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">Limpiar</button>
+            </div>
+            <sc-if value="{{ aviso }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 14px; font-weight: 600; color: #6f6119; background: #e8dfae; border-radius: 16px; padding: 12px 16px;">{{ aviso }}</div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ esPersonalizar }}" hint-placeholder-val="{{ false }}">
+    <section style="padding: 24px 0 80px;">
+      <span style="display: inline-block; padding: 8px 16px; border-radius: 999px; background: #f7d0bc; color: #8a5a3c; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;">Personalizados por ti</span>
+      <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(38px, 7vw, 62px); line-height: 1; margin: 22px 0 0; max-width: 720px; text-wrap: pretty;">Elige tu artículo y la cantidad</h1>
+      <p style="font-size: 18px; line-height: 1.6; color: #554c3a; max-width: 540px; margin: 18px 0 0;">Precio fijo por pieza, ya con la personalización incluida. Paga aquí y después platicamos tu diseño por WhatsApp.</p>
+
+      <div style="display: grid; display: flex; flex-wrap: wrap; gap: clamp(24px, 3vw, 40px); margin-top: 40px; align-items: flex-start;">
+        <div style="flex: 999 1 420px; min-width: 0; display: grid; gap: 18px;">
+          <sc-for list="{{ personalizables }}" as="a" hint-placeholder-count="5">
+            <div style="display: flex; flex-wrap: wrap; gap: 20px 24px; align-items: center; background: #fff; border-radius: 30px; padding: 20px;">
+              <div style="position: relative; width: 132px; height: 132px; border-radius: 24px; overflow: hidden; background: {{ a.tono }};">
+                <img src="{{ a.img }}" alt="{{ a.nombre }}" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.9) contrast(.96);">
+              </div>
+              <div>
+                <div style="flex: 1 1 240px; min-width: 0;">
+                <div style="font-family: 'Caprasimo', serif; font-size: 26px; line-height: 1.1;">{{ a.nombre }}</div>
+                <p style="font-size: 15px; line-height: 1.55; color: #6b6150; margin: 8px 0 0; max-width: 380px;">{{ a.desc }}</p>
+                <div style="font-size: 20px; font-weight: 700; margin-top: 12px;">{{ a.precioFmt }} <span style="font-size: 14px; font-weight: 500; color: #6b6150;">por pieza</span></div>
+                <sc-if value="{{ a.esPlayera }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: grid; gap: 12px; margin-top: 16px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                      <sc-for list="{{ a.cortes }}" as="c" hint-placeholder-count="2">
+                        <button onClick="{{ c.elegir }}" style="border: 1.5px solid {{ c.borde }}; background: {{ c.fondo }}; color: {{ c.color }}; font-size: 14px; font-weight: 600; padding: 10px 18px; border-radius: 999px; cursor: pointer;">{{ c.nombre }}</button>
+                      </sc-for>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                      <sc-for list="{{ a.tallas }}" as="t" hint-placeholder-count="6">
+                        <button onClick="{{ t.elegir }}" style="min-width: 48px; border: 1.5px solid {{ t.borde }}; background: {{ t.fondo }}; color: {{ t.color }}; font-size: 14px; font-weight: 700; padding: 10px 14px; border-radius: 999px; cursor: pointer;">{{ t.nombre }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ a.esVaso }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;">
+                    <sc-for list="{{ a.vasoOpciones }}" as="v" hint-placeholder-count="2">
+                      <button onClick="{{ v.elegir }}" style="border: 1.5px solid {{ v.borde }}; background: {{ v.fondo }}; color: {{ v.color }}; font-size: 14px; font-weight: 600; padding: 10px 18px; border-radius: 999px; cursor: pointer;">{{ v.nombre }}</button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px; padding-right: 8px;">
+                <button onClick="{{ a.menos }}" style="width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 20px; color: #241f16; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">−</button>
+                <span style="font-size: 19px; font-weight: 700; min-width: 26px; text-align: center;">{{ a.qty }}</span>
+                <button onClick="{{ a.mas }}" style="width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid rgba(36,31,22,.16); background: transparent; font-size: 20px; color: #241f16; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc;">+</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background: #fff8dc; border: 1.5px solid rgba(36,31,22,.14); border-radius: 32px; padding: 30px; flex: 1 1 300px; position: sticky; top: 110px;">
+          <div style="font-family: 'Caprasimo', serif; font-size: 26px;">Tu pedido</div>
+          <div style="display: grid; gap: 12px; margin-top: 20px; font-size: 15px;">
+            <sc-for list="{{ resumenPersonalizado }}" as="r" hint-placeholder-count="2">
+              <div style="display: flex; justify-content: space-between; gap: 16px;">
+                <span style="color: #554c3a;">{{ r.linea }}</span>
+                <span style="font-weight: 700;">{{ r.importe }}</span>
+              </div>
+            </sc-for>
+            <sc-if value="{{ personalizadoVacio }}" hint-placeholder-val="{{ true }}">
+              <span style="color: #6b6150;">Elige al menos una pieza para continuar.</span>
+            </sc-if>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 22px; padding-top: 20px; border-top: 1.5px solid rgba(36,31,22,.14);">
+            <span style="font-size: 17px; font-weight: 600;">Total</span>
+            <span style="font-family: 'Caprasimo', serif; font-size: 32px;">{{ totalPersonalizadoFmt }}</span>
+          </div>
+          <p style="font-size: 13px; color: #6b6150; line-height: 1.5; margin: 14px 0 0;">Incluye personalización. El envío se cotiza al confirmar tu diseño.</p>
+          <button onClick="{{ pagarPersonalizado }}" style="width: 100%; margin-top: 20px; border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Pagar</button>
+          <a href="{{ waLink }}" target="_blank" style="display: block; text-align: center; margin-top: 14px; font-size: 14px; color: #6b6150;">tengo una duda antes de pagar</a>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ esGracias }}" hint-placeholder-val="{{ false }}">
+    <section style="padding: clamp(36px, 5vw, 60px) 0 clamp(64px, 8vw, 110px); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(32px, 4vw, 56px); align-items: center;">
+      <div>
+        <span style="display: inline-block; padding: 8px 16px; border-radius: 999px; background: #e8dfae; color: #6f6119; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;">Pago recibido</span>
+        <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(44px, 8vw, 74px); line-height: .98; margin: 24px 0 0;">¡Gracias por<br><span style="color: #af9d36;">tu compra!</span></h1>
+        <p style="font-size: 19px; line-height: 1.6; color: #554c3a; max-width: 480px; margin: 22px 0 0;">Ya tengo tu pedido. El último paso es platicar tu diseño: nombre, colores, frase o la referencia que traes guardada.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px;">
+          <a href="{{ waLink }}" target="_blank" style="background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#8d7c26; color:#fff8dc;">Chatea por WhatsApp para personalizar tu artículo</a>
+          <a onClick="{{ irInicio }}" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 30px; border-radius: 999px;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Volver al inicio</a>
+        </div>
+        <p style="font-size: 14px; color: #6b6150; margin: 26px 0 0;">Te escribo también por correo con el comprobante y los tiempos de entrega.</p>
+      </div>
+      <div style="position: relative; aspect-ratio: 1 / 1;">
+        <div style="position: absolute; inset: 0; border-radius: 999px; background: #f7d0bc; overflow: hidden;">
+          <img src="https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172047_1e285194-b27c-498d-afd7-2540db8192fb.png" alt="Gracias por tu compra" style="width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.9) contrast(.96);">
+        </div>
+        <div style="position: absolute; top: -4px; right: 10px; width: 92px; height: 92px; animation: spin 26s linear infinite; color: #eaa93d;">
+          <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;"><path d="M50 2 L57 43 L98 50 L57 57 L50 98 L43 57 L2 50 L43 43 Z" fill="currentColor"></path></svg>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <footer style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 40px; padding: 60px 0 70px; border-top: 1.5px solid rgba(36,31,22,.1); margin-top: 40px;">
+    <div>
+      <img src="assets/logo.png" alt="DecoCraft" style="width: 64px; height: 64px; object-fit: contain;">
+      <p style="font-size: 15px; line-height: 1.6; color: #6b6150; max-width: 260px; margin: 16px 0 0;">Papelería creativa y artículos personalizados, hechos de a poquito y con calma.</p>
+    </div>
+    <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
+      <div>
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #241f16;">{{ col.titulo }}</div>
+        <div style="display: grid; gap: 10px; margin-top: 16px;">
+          <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+            <a href="#" style="font-size: 15px; color: #6b6150;">{{ l }}</a>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5215512345678&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tienda&quot;},&quot;envioGratisDesde&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:800,&quot;min&quot;:0,&quot;max&quot;:3000,&quot;step&quot;:50,&quot;unit&quot;:&quot;MXN&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Tienda&quot;},&quot;mostrarTicker&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;},&quot;hojasOtono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;}}">
+const TONOS = ['#f7d0bc', '#eaa93d', '#e8dfae'];
+const SEED = [
+  { id: 'p1', nombre: 'Vaso escarchado flores', categoria: 'Vasos y termos', precio: 260, desc: 'Vidrio de 500ml escarchado a mano, con tapa y popote de acero.', badge: 'Nuevo', activo: true, img: '', slot: 'vaso escarchado' },
+  { id: 'p2', nombre: 'Hoja de stickers frases', categoria: 'Stickers', precio: 85, desc: '18 stickers de vinil resistente al agua, corte troquelado.', badge: '', activo: true, img: '', slot: 'stickers frases' },
+  { id: 'p3', nombre: 'Playera bordada inicial', categoria: 'Playeras', precio: 340, desc: 'Algodón peinado, bordado en tres colores. Tallas CH a XG.', badge: 'Más vendido', activo: true, img: '', slot: 'playera inicial' },
+  { id: 'p4', nombre: 'Agenda 2027 pastel', categoria: 'Agendas y planners', precio: 290, desc: 'Semana vista, 160 páginas, tapa dura y separador de listón.', badge: '', activo: true, img: '', slot: 'agenda pastel' },
+  { id: 'p5', nombre: 'Set de notas adhesivas', categoria: 'Papelería creativa', precio: 120, desc: 'Cinco blocks con diseños distintos, 40 hojas cada uno.', badge: '', activo: true, img: '', slot: 'notas adhesivas' },
+  { id: 'p6', nombre: 'Termo 600ml con nombre', categoria: 'Vasos y termos', precio: 420, desc: 'Acero inoxidable, mantiene frío 12 horas. Grabado incluido.', badge: '', activo: true, img: '', slot: 'termo' },
+  { id: 'p7', nombre: 'Stickers troquelados mini', categoria: 'Stickers', precio: 65, desc: 'Hoja de 30 stickers pequeños, ideales para agenda.', badge: '', activo: true, img: '', slot: 'stickers mini' },
+  { id: 'p8', nombre: 'Libreta cosida a mano', categoria: 'Papelería creativa', precio: 180, desc: 'Papel crema de 90g, costura vista, 80 páginas.', badge: 'Nuevo', activo: true, img: '', slot: 'libreta' },
+  { id: 'p9', nombre: 'Box lunch decorado', categoria: 'Box lunch', precio: 190, desc: 'Caja con tapa y grabado, ideal para regalo o evento.', badge: '', activo: true, img: '', slot: 'box lunch' }
+];
+const CATS = ['Vasos y termos', 'Stickers', 'Papelería creativa', 'Playeras', 'Agendas y planners', 'Box lunch'];
+const IMG = 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172047_';
+const FOTO = {
+  hero: IMG + '1e285194-b27c-498d-afd7-2540db8192fb.png',
+  vasos: IMG + '41a369fb-2643-4bf9-ab96-93cc87020e2a.png',
+  stickers: IMG + 'c062f3e0-8d2e-4b81-9c20-9c89b0d0652d.png',
+  papeleria: IMG + '4e4e9a0d-1abb-42cc-bd7e-f8d771ded7fe.png',
+  playeras: IMG + '7cbebbf3-e9fb-4050-a467-48c13d90e4dc.png',
+  agendas: IMG + '08e3e4b3-f4b3-4390-9808-f229a729e12b.png',
+  boxlunch: 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172527_220b9473-eb5c-4037-b773-c8a3bccbe7ab.png',
+  cVaso: IMG + 'b6f08091-72d3-4262-a076-fbde1ea596e8.png',
+  cPlayera: IMG + '69543782-01ed-4d85-b59f-e9cbfe19ec3b.png',
+  cTote: IMG + '384e72eb-c0a6-45a5-82bc-131cce1c3899.png',
+  cStickers: IMG + 'c9956b36-b2e2-4ab6-af41-90b48b2507dc.png',
+  cBox: IMG + '2b0c62da-fbfb-41e6-bc80-6c9b74179281.png'
+};
+const REVIEWS = [
+  { nombre: 'Ana Sofía R.', lugar: 'Guadalajara, Jal.', estrellas: 5, texto: 'Pedí un vaso con mi nombre y quedó igualito a lo que le mandé. Lo uso todos los días y no se ha borrado nada.', compra: 'Vaso personalizado', fecha: 'Hace 2 semanas', foto: 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172746_111ebf45-e610-4cca-8f0e-de8855c7c61a.png' },
+  { nombre: 'Regina M.', lugar: 'CDMX', estrellas: 5, texto: 'La playera bordada es de mejor calidad de lo que esperaba. El bordado está perfecto y la tela no se siente corriente.', compra: 'Playera personalizada', fecha: 'Hace 1 mes', foto: 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172747_8961db32-5295-4841-8324-7de5daa63fbb.png' },
+  { nombre: 'Fernanda L.', lugar: 'Monterrey, N.L.', estrellas: 5, texto: 'Compré la agenda con un paquete de stickers y llegó todo súper bien empacado. Ya voy por mi segundo pedido.', compra: 'Agenda y stickers', fecha: 'Hace 3 semanas', foto: 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172747_ac1cd492-9285-4bb0-af32-38ea9e60b919.png' },
+  { nombre: 'Daniela C.', lugar: 'Puebla, Pue.', estrellas: 5, texto: 'La tote bag me la llevo a todos lados. Le pedí un diseño mío y me ayudó a ajustarlo por WhatsApp sin problema.', compra: 'Tote bag personalizada', fecha: 'Hace 5 días', foto: 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172746_3a1a07a7-751e-48a0-9e93-a8bc210650aa.png' },
+  { nombre: 'Karla V.', lugar: 'Querétaro, Qro.', estrellas: 4, texto: 'Pedí 20 box lunch para el cumple de mi hermana y a todos les encantaron. Tardaron un día más de lo dicho, pero valió la pena.', compra: 'Box lunch personalizado', fecha: 'Hace 2 meses', foto: 'https://d8j0ntlcm91z4.cloudfront.net/user_33nBsiFZ2wzzZFjadkZaAjO6Rd1/hf_20260819_172747_49c8fe0a-57df-4a21-8d5f-8bdb97036edc.png' }
+];
+const FOTO_CAT = {
+  'Vasos y termos': FOTO.vasos,
+  'Stickers': FOTO.stickers,
+  'Papelería creativa': FOTO.papeleria,
+  'Playeras': FOTO.playeras,
+  'Agendas y planners': FOTO.agendas,
+  'Box lunch': FOTO.boxlunch
+};
+const PERSONALIZABLES = [
+  { id: 'vaso', nombre: 'Vaso personalizado', precio: 260, desc: 'Vidrio de 500ml con tapa y popote. Nombre, frase o diseño a color.', tono: '#f7d0bc', slot: 'vaso', img: FOTO.cVaso },
+  { id: 'playera', nombre: 'Playera personalizada', precio: 340, desc: 'Algodón peinado, tallas CH a XG. Estampado o bordado.', tono: '#e8dfae', slot: 'playera', img: FOTO.cPlayera },
+  { id: 'totebag', nombre: 'Tote bag personalizada', precio: 280, desc: 'Manta gruesa de 38×42cm, asas reforzadas.', tono: '#eaa93d', slot: 'tote bag', img: FOTO.cTote },
+  { id: 'stickers', nombre: 'Stickers personalizados', precio: 95, desc: 'Hoja de vinil resistente al agua con tus diseños.', tono: '#f7d0bc', slot: 'stickers', img: FOTO.cStickers },
+  { id: 'boxlunch', nombre: 'Box lunch personalizado', precio: 190, desc: 'Caja con tapa y grabado, ideal para regalo o evento.', tono: '#e8dfae', slot: 'box lunch', img: FOTO.cBox }
+];
+const CORTES = ['Corte normal', 'Oversize'];
+const TALLAS = { 'Corte normal': ['XS', 'S', 'M', 'L', 'XL', 'XXL'], 'Oversize': ['S', 'M', 'L', 'XL'] };
+const VASO_OPC = ['Vaso con popote y tapa', 'Solo vaso'];
+const esPlayera = (cat) => cat === 'Playeras';
+const esVaso = (cat) => cat === 'Vasos y termos';
+const KEY_P = 'decocraft.productos.v1';
+const KEY_C = 'decocraft.carrito.v1';
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.railRef = React.createRef();
+    this.state = {
+      screen: 'inicio',
+      productos: SEED,
+      carrito: {},
+      catFiltro: 'Todo',
+      busqueda: '',
+      activoId: 'p1',
+      cantidad: 1,
+      editId: null,
+      aviso: '',
+      custom: {},
+      reviewIdx: 0,
+      hojas: true,
+      corte: CORTES[0],
+      talla: 'M',
+      vasoOpc: VASO_OPC[0],
+      customOpc: {},
+      form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true }
+    };
+  }
+  componentDidMount() {
+    try {
+      const p = JSON.parse(localStorage.getItem(KEY_P) || 'null');
+      const c = JSON.parse(localStorage.getItem(KEY_C) || 'null');
+      const next = {};
+      if (Array.isArray(p) && p.length) next.productos = p;
+      if (c && typeof c === 'object') next.carrito = c;
+      if (Object.keys(next).length) this.setState(next);
+    } catch (e) {}
+    this.observe();
+    this._hojas = setTimeout(() => this.setState({ hojas: false }), 21000);
+  }
+  componentDidUpdate(_, prev) { if (prev.screen !== this.state.screen) this.observe(); }
+  observe() {
+    if (this._io) this._io.disconnect();
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    setTimeout(() => document.querySelectorAll('.rv:not(.in)').forEach((el) => io.observe(el)), 30);
+    this._io = io;
+  }
+  componentWillUnmount() { if (this._io) this._io.disconnect(); clearTimeout(this._hojas); }
+
+  persist(productos, carrito) {
+    try {
+      if (productos) localStorage.setItem(KEY_P, JSON.stringify(productos));
+      if (carrito) localStorage.setItem(KEY_C, JSON.stringify(carrito));
+    } catch (e) {}
+  }
+  go = (screen) => { this.setState({ screen, aviso: '' }); window.scrollTo(0, 0); };
+  tono(i) { return TONOS[i % TONOS.length]; }
+  fmt(n) { return '$' + Number(n || 0).toLocaleString('es-MX'); }
+
+  add = (id, qty, opciones) => {
+    const key = opciones ? id + '::' + opciones : id;
+    const carrito = Object.assign({}, this.state.carrito);
+    carrito[key] = (carrito[key] || 0) + (qty || 1);
+    this.setState({ carrito });
+    this.persist(null, carrito);
+  };
+  setQty = (id, qty) => {
+    const carrito = Object.assign({}, this.state.carrito);
+    if (qty <= 0) delete carrito[id]; else carrito[id] = qty;
+    this.setState({ carrito });
+    this.persist(null, carrito);
+  };
+  setCustom = (id, qty) => {
+    const custom = Object.assign({}, this.state.custom);
+    if (qty <= 0) delete custom[id]; else custom[id] = qty;
+    this.setState({ custom });
+  };
+  abrir = (id) => { this.setState({ activoId: id, cantidad: 1, screen: 'producto' }); window.scrollTo(0, 0); };
+
+  onDragStart = (e) => {
+    const el = this.railRef.current;
+    if (!el) return;
+    const x0 = e.pageX, s0 = el.scrollLeft;
+    el.style.cursor = 'grabbing';
+    const move = (ev) => { el.scrollLeft = s0 - (ev.pageX - x0); };
+    const up = () => { el.style.cursor = 'grab'; window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  setForm = (k, v) => this.setState((s) => ({ form: Object.assign({}, s.form, { [k]: v }) }));
+  onImagen = (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => this.setForm('img', String(r.result));
+    r.readAsDataURL(f);
+  };
+  nuevo = () => this.setState({ editId: null, aviso: '', form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true } });
+  editar = (p) => {
+    this.setState({ editId: p.id, aviso: '', form: { nombre: p.nombre, categoria: p.categoria, precio: String(p.precio), desc: p.desc, badge: p.badge || '', img: p.img || '', activo: p.activo !== false } });
+    window.scrollTo(0, 0);
+  };
+  borrar = (id) => {
+    const productos = this.state.productos.filter((p) => p.id !== id);
+    const carrito = Object.assign({}, this.state.carrito);
+    Object.keys(carrito).forEach((k) => { if (k.split('::')[0] === id) delete carrito[k]; });
+    this.setState({ productos, carrito, aviso: 'Producto eliminado.' });
+    this.persist(productos, carrito);
+  };
+  guardar = () => {
+    const f = this.state.form;
+    if (!f.nombre.trim() || !String(f.precio).trim()) { this.setState({ aviso: 'Falta el nombre o el precio.' }); return; }
+    const base = {
+      nombre: f.nombre.trim(),
+      categoria: f.categoria,
+      precio: Number(String(f.precio).replace(/[^0-9.]/g, '')) || 0,
+      desc: f.desc.trim(),
+      badge: f.badge.trim(),
+      img: f.img,
+      activo: f.activo !== false,
+      slot: 'foto de producto'
+    };
+    let productos;
+    if (this.state.editId) {
+      productos = this.state.productos.map((p) => (p.id === this.state.editId ? Object.assign({}, p, base) : p));
+    } else {
+      productos = [Object.assign({ id: 'p' + Date.now() }, base)].concat(this.state.productos);
+    }
+    this.setState({ productos, editId: null, aviso: this.state.editId ? 'Cambios guardados.' : 'Producto publicado.', form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true } });
+    this.persist(productos, null);
+  };
+
+  decorar = (p, i) => ({
+    id: p.id,
+    nombre: p.nombre,
+    categoria: p.categoria,
+    desc: p.desc,
+    badge: p.badge || '',
+    precioFmt: this.fmt(p.precio),
+    tono: this.tono(i),
+    slot: p.slot || 'foto de producto',
+    img: p.img || FOTO_CAT[p.categoria] || '',
+    tieneImg: !!(p.img || FOTO_CAT[p.categoria]),
+    sinImg: !(p.img || FOTO_CAT[p.categoria]),
+    abrir: () => this.abrir(p.id),
+    agregar: () => (esPlayera(p.categoria) || esVaso(p.categoria) ? this.abrir(p.id) : this.add(p.id, 1)),
+    textoAgregar: esPlayera(p.categoria) || esVaso(p.categoria) ? 'Elegir' : 'Agregar'
+  });
+
+  renderVals() {
+    const s = this.state;
+    const wa = String(this.props.whatsapp || '5215512345678').replace(/[^0-9]/g, '');
+    const publicados = s.productos.filter((p) => p.activo !== false);
+    const q = s.busqueda.trim().toLowerCase();
+    const filtrados = publicados.filter((p) => (s.catFiltro === 'Todo' || p.categoria === s.catFiltro) && (!q || p.nombre.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q)));
+    const activo = s.productos.find((p) => p.id === s.activoId) || publicados[0] || SEED[0];
+    const activoIdx = s.productos.indexOf(activo);
+
+    const items = Object.keys(s.carrito).map((key) => {
+      const pid = key.split('::')[0];
+      const opciones = key.split('::')[1] || '';
+      const id = key;
+      const p = s.productos.find((x) => x.id === pid);
+      if (!p) return null;
+      const i = s.productos.indexOf(p);
+      const qty = s.carrito[key];
+      return {
+        id: id, pid: pid, opciones: opciones, nombre: p.nombre, categoria: p.categoria, qty: qty,
+        img: p.img || FOTO_CAT[p.categoria] || '', tieneImg: !!(p.img || FOTO_CAT[p.categoria]), sinImg: !(p.img || FOTO_CAT[p.categoria]), tono: this.tono(i),
+        subtotalFmt: this.fmt(p.precio * qty),
+        tieneOpciones: !!opciones,
+        mas: () => this.setQty(id, qty + 1),
+        menos: () => this.setQty(id, qty - 1),
+        quitar: () => this.setQty(id, 0)
+      };
+    }).filter(Boolean);
+    const subtotal = items.reduce((t, it) => { const p = s.productos.find((x) => x.id === it.pid); return t + p.precio * it.qty; }, 0);
+    const gratisDesde = Number(this.props.envioGratisDesde ?? 800);
+    const envio = subtotal === 0 || subtotal >= gratisDesde ? 0 : 120;
+
+    const conteos = { Todo: publicados.length };
+    CATS.forEach((c) => { conteos[c] = publicados.filter((p) => p.categoria === c).length; });
+
+    return {
+      esInicio: s.screen === 'inicio',
+      esCatalogo: s.screen === 'catalogo',
+      esProducto: s.screen === 'producto',
+      esCarrito: s.screen === 'carrito',
+      esAdmin: s.screen === 'admin',
+      esPersonalizar: s.screen === 'personalizar',
+      esGracias: s.screen === 'gracias',
+      irPersonalizar: () => this.go('personalizar'),
+      reviews: REVIEWS.map((r) => ({
+        nombre: r.nombre, lugar: r.lugar, texto: r.texto, compra: r.compra, fecha: r.fecha, foto: r.foto,
+        estrellas: '★★★★★'.slice(0, r.estrellas) + '☆☆☆☆☆'.slice(0, 5 - r.estrellas)
+      })),
+      totalReviews: REVIEWS.length,
+      ratingPromedio: (REVIEWS.reduce((t, r) => t + r.estrellas, 0) / REVIEWS.length).toFixed(1),
+      reviewTransform: 'translateX(calc(' + (-s.reviewIdx) + ' * (max(272px, (100% - 48px) / 3) + 24px)))',
+      reviewDots: Array.from({ length: Math.max(1, REVIEWS.length - 2) }, (_, i) => ({
+        ancho: s.reviewIdx === i ? '28px' : '9px',
+        color: s.reviewIdx === i ? '#af9d36' : 'rgba(36,31,22,.2)',
+        ir: () => this.setState({ reviewIdx: i })
+      })),
+      reviewSiguiente: () => this.setState((st) => ({ reviewIdx: (st.reviewIdx + 1) % Math.max(1, REVIEWS.length - 2) })),
+      reviewAnterior: () => this.setState((st) => ({ reviewIdx: (st.reviewIdx - 1 + Math.max(1, REVIEWS.length - 2)) % Math.max(1, REVIEWS.length - 2) })),
+      personalizables: PERSONALIZABLES.map((a) => ({
+        id: a.id, nombre: a.nombre, desc: a.desc, tono: a.tono, slot: a.slot, img: a.img,
+        precioFmt: this.fmt(a.precio),
+        qty: s.custom[a.id] || 0,
+        esPlayera: a.id === 'playera',
+        esVaso: a.id === 'vaso',
+        cortes: CORTES.map((c) => ({
+          nombre: c,
+          fondo: (s.customOpc.corte || CORTES[0]) === c ? '#af9d36' : 'transparent',
+          color: (s.customOpc.corte || CORTES[0]) === c ? '#fff8dc' : '#554c3a',
+          borde: (s.customOpc.corte || CORTES[0]) === c ? '#af9d36' : 'rgba(36,31,22,.16)',
+          elegir: () => this.setState((st) => ({ customOpc: Object.assign({}, st.customOpc, { corte: c, talla: TALLAS[c].includes(st.customOpc.talla || 'M') ? (st.customOpc.talla || 'M') : 'M' }) }))
+        })),
+        tallas: (TALLAS[s.customOpc.corte || CORTES[0]]).map((t) => ({
+          nombre: t,
+          fondo: (s.customOpc.talla || 'M') === t ? '#af9d36' : 'transparent',
+          color: (s.customOpc.talla || 'M') === t ? '#fff8dc' : '#554c3a',
+          borde: (s.customOpc.talla || 'M') === t ? '#af9d36' : 'rgba(36,31,22,.16)',
+          elegir: () => this.setState((st) => ({ customOpc: Object.assign({}, st.customOpc, { talla: t }) }))
+        })),
+        vasoOpciones: VASO_OPC.map((v) => ({
+          nombre: v,
+          fondo: (s.customOpc.vaso || VASO_OPC[0]) === v ? '#af9d36' : 'transparent',
+          color: (s.customOpc.vaso || VASO_OPC[0]) === v ? '#fff8dc' : '#554c3a',
+          borde: (s.customOpc.vaso || VASO_OPC[0]) === v ? '#af9d36' : 'rgba(36,31,22,.16)',
+          elegir: () => this.setState((st) => ({ customOpc: Object.assign({}, st.customOpc, { vaso: v }) }))
+        })),
+        mas: () => this.setCustom(a.id, (s.custom[a.id] || 0) + 1),
+        menos: () => this.setCustom(a.id, (s.custom[a.id] || 0) - 1)
+      })),
+      resumenPersonalizado: PERSONALIZABLES.filter((a) => s.custom[a.id]).map((a) => ({
+        linea: s.custom[a.id] + ' × ' + a.nombre + (a.id === 'playera' ? ' (' + (s.customOpc.corte || CORTES[0]) + ', ' + (s.customOpc.talla || 'M') + ')' : (a.id === 'vaso' ? ' (' + (s.customOpc.vaso || VASO_OPC[0]) + ')' : '')),
+        importe: this.fmt(a.precio * s.custom[a.id])
+      })),
+      personalizadoVacio: PERSONALIZABLES.every((a) => !s.custom[a.id]),
+      totalPersonalizadoFmt: this.fmt(PERSONALIZABLES.reduce((t, a) => t + a.precio * (s.custom[a.id] || 0), 0)),
+      pagarPersonalizado: () => {
+        if (PERSONALIZABLES.every((a) => !s.custom[a.id])) return;
+        this.setState({ custom: {} });
+        this.go('gracias');
+      },
+      pagarCarrito: () => {
+        this.setState({ carrito: {} });
+        this.persist(null, {});
+        this.go('gracias');
+      },
+      mostrarTicker: this.props.mostrarTicker !== false,
+      hojas: s.hojas && this.props.hojasOtono !== false,
+      waLink: 'https://wa.me/' + wa + '?text=' + encodeURIComponent('¡Hola! Quiero algo personalizado 🌼'),
+      waLinkProducto: 'https://wa.me/' + wa + '?text=' + encodeURIComponent('¡Hola! Me interesa ' + activo.nombre + ' personalizado.'),
+      irInicio: () => this.go('inicio'),
+      irCatalogo: () => { this.setState({ catFiltro: 'Todo' }); this.go('catalogo'); },
+      irCarrito: () => this.go('carrito'),
+      irAdmin: () => this.go('admin'),
+      nav: [
+        { label: 'Catálogo', go: () => this.go('catalogo') },
+        { label: 'Vasos personalizados', go: () => this.go('catalogo') },
+        { label: 'Personalizados por ti', go: () => this.go('personalizar') },
+        { label: 'Sobre mí', go: () => this.go('inicio') }
+      ],
+      totalPiezas: items.reduce((t, it) => t + it.qty, 0),
+      conteoProductos: '+' + publicados.length,
+      railRef: this.railRef,
+      onDragStart: this.onDragStart,
+      categoriasHome: CATS.map((c, i) => ({
+        nombre: c, piezas: conteos[c] + ' diseños', tono: this.tono(i), slot: c.toLowerCase(), img: FOTO_CAT[c],
+        abrir: () => { this.setState({ catFiltro: c }); this.go('catalogo'); }
+      })),
+      destacados: publicados.slice(0, 8).map(this.decorar),
+      productosFiltrados: filtrados.map(this.decorar),
+      catalogoVacio: filtrados.length === 0,
+      resumenCatalogo: publicados.length + ' productos listos para enviar · ' + (s.catFiltro === 'Todo' ? 'todas las categorías' : s.catFiltro),
+      busqueda: s.busqueda,
+      onBuscar: (e) => this.setState({ busqueda: e.target.value }),
+      filtrosCat: ['Todo'].concat(CATS).map((c) => ({
+        nombre: c, n: conteos[c],
+        fondo: s.catFiltro === c ? '#af9d36' : 'transparent',
+        color: s.catFiltro === c ? '#fff8dc' : '#554c3a',
+        elegir: () => this.setState({ catFiltro: c })
+      })),
+      activoNombre: activo.nombre,
+      activoCategoria: activo.categoria,
+      activoDesc: activo.desc,
+      activoPrecioFmt: this.fmt(activo.precio),
+      activoTono: this.tono(activoIdx < 0 ? 0 : activoIdx),
+      activoImg: activo.img || FOTO_CAT[activo.categoria] || '',
+      activoTieneImg: !!(activo.img || FOTO_CAT[activo.categoria]),
+      activoSinImg: !(activo.img || FOTO_CAT[activo.categoria]),
+      activoSlot: activo.slot || 'foto de producto',
+      activoEsPlayera: esPlayera(activo.categoria),
+      activoEsVaso: esVaso(activo.categoria),
+      cortes: CORTES.map((c) => ({
+        nombre: c,
+        fondo: s.corte === c ? '#af9d36' : 'transparent',
+        color: s.corte === c ? '#fff8dc' : '#554c3a',
+        borde: s.corte === c ? '#af9d36' : 'rgba(36,31,22,.16)',
+        elegir: () => this.setState({ corte: c, talla: TALLAS[c].includes(s.talla) ? s.talla : 'M' })
+      })),
+      tallas: (TALLAS[s.corte] || TALLAS['Corte normal']).map((t) => ({
+        nombre: t,
+        fondo: s.talla === t ? '#af9d36' : 'transparent',
+        color: s.talla === t ? '#fff8dc' : '#554c3a',
+        borde: s.talla === t ? '#af9d36' : 'rgba(36,31,22,.16)',
+        elegir: () => this.setState({ talla: t })
+      })),
+      vasoOpciones: VASO_OPC.map((v) => ({
+        nombre: v,
+        fondo: s.vasoOpc === v ? '#af9d36' : 'transparent',
+        color: s.vasoOpc === v ? '#fff8dc' : '#554c3a',
+        borde: s.vasoOpc === v ? '#af9d36' : 'rgba(36,31,22,.16)',
+        elegir: () => this.setState({ vasoOpc: v })
+      })),
+      cantidad: s.cantidad,
+      masCantidad: () => this.setState((st) => ({ cantidad: st.cantidad + 1 })),
+      menosCantidad: () => this.setState((st) => ({ cantidad: Math.max(1, st.cantidad - 1) })),
+      agregarActivo: () => {
+        const opc = esPlayera(activo.categoria) ? s.corte + ' · Talla ' + s.talla : (esVaso(activo.categoria) ? s.vasoOpc : '');
+        this.add(activo.id, s.cantidad, opc);
+        this.go('carrito');
+      },
+      detallesProducto: [
+        { k: 'Envío', v: 'A todo México, 3–5 días' },
+        { k: 'Personalización', v: 'Nombre, color y frase' },
+        { k: 'Mínimo', v: '1 pieza' }
+      ],
+      carritoItems: items,
+      carritoVacio: items.length === 0,
+      carritoConItems: items.length > 0,
+      subtotalFmt: this.fmt(subtotal),
+      envioFmt: envio === 0 ? 'Gratis' : this.fmt(envio),
+      totalFmt: this.fmt(subtotal + envio),
+      notaEnvio: 'Envío gratis en compras desde ' + this.fmt(gratisDesde) + '.',
+      adminLista: s.productos.map((p, i) => ({
+        nombre: p.nombre, categoria: p.categoria, precioFmt: this.fmt(p.precio),
+        tono: this.tono(i), img: p.img || FOTO_CAT[p.categoria] || '', tieneImg: !!(p.img || FOTO_CAT[p.categoria]), sinImg: !(p.img || FOTO_CAT[p.categoria]),
+        estado: p.activo === false ? 'Oculto' : 'Publicado',
+        estadoFondo: p.activo === false ? '#f0e6cf' : '#e8dfae',
+        estadoColor: p.activo === false ? '#6b6150' : '#6f6119',
+        editar: () => this.editar(p),
+        borrar: () => this.borrar(p.id)
+      })),
+      categoriasBase: CATS,
+      tituloForm: s.editId ? 'Editar producto' : 'Nuevo producto',
+      formNombre: s.form.nombre,
+      formCategoria: s.form.categoria,
+      formPrecio: s.form.precio,
+      formDesc: s.form.desc,
+      formBadge: s.form.badge,
+      formImg: s.form.img,
+      formTieneImg: !!s.form.img,
+      formSinImg: !s.form.img,
+      formActivo: s.form.activo !== false,
+      onFormNombre: (e) => this.setForm('nombre', e.target.value),
+      onFormCategoria: (e) => this.setForm('categoria', e.target.value),
+      onFormPrecio: (e) => this.setForm('precio', e.target.value),
+      onFormDesc: (e) => this.setForm('desc', e.target.value),
+      onFormBadge: (e) => this.setForm('badge', e.target.value),
+      onFormActivo: (e) => this.setForm('activo', e.target.checked),
+      onFormImagen: this.onImagen,
+      nuevoProducto: this.nuevo,
+      guardarProducto: this.guardar,
+      aviso: s.aviso,
+      pasos: [
+        { n: '1', t: 'Me escribes con tu idea y para cuándo la necesitas' },
+        { n: '2', t: 'Te mando el diseño y el precio, ajustamos detalles' },
+        { n: '3', t: 'Apruebas, produzco y te llega a casa' }
+      ],
+      ticker: ['vasos', '✳', 'stickers', '✳', 'playeras', '✳', 'papelería', '✳', 'agendas', '✳', 'vasos', '✳', 'stickers', '✳', 'playeras', '✳', 'papelería', '✳', 'agendas', '✳'],
+      footerCols: [
+        { titulo: 'Tienda', links: ['Vasos personalizados', 'Box lunch', 'Más vendidos', 'Tarjeta de regalo'] },
+        { titulo: 'Ayuda', links: ['Envíos y tiempos', 'Cambios', 'Preguntas frecuentes', 'Contacto'] },
+        { titulo: 'Sígueme', links: ['Instagram', 'TikTok', 'Pinterest', 'WhatsApp'] }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>
