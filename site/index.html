@@ -609,8 +609,8 @@
               <span style="font-family: 'Caprasimo', serif; font-size: 30px;">{{ totalFmt }}</span>
             </div>
             <p style="font-size: 13px; color: #6b6150; line-height: 1.5; margin: 14px 0 0;">{{ notaEnvio }}</p>
-            <button onClick="{{ pagarCarrito }}" style="width: 100%; margin-top: 22px; border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Pagar</button>
-            <a href="{{ waLink }}" target="_blank" style="display: block; text-align: center; margin-top: 14px; font-size: 14px; color: #6b6150;">o pedir por WhatsApp</a>
+            <button onClick="{{ pagarCarrito }}" style="width: 100%; margin-top: 22px; border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Enviar pedido por WhatsApp</button>
+            <a href="{{ waLink }}" target="_blank" style="display: block; text-align: center; margin-top: 14px; font-size: 14px; color: #6b6150;">o escríbeme si tienes una duda</a>
           </div>
         </div>
       </sc-if>
@@ -785,8 +785,8 @@
             <span style="font-family: 'Caprasimo', serif; font-size: 32px;">{{ totalPersonalizadoFmt }}</span>
           </div>
           <p style="font-size: 13px; color: #6b6150; line-height: 1.5; margin: 14px 0 0;">Incluye personalización. El envío se cotiza al confirmar tu diseño.</p>
-          <button onClick="{{ pagarPersonalizado }}" style="width: 100%; margin-top: 20px; border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Pagar</button>
-          <a href="{{ waLink }}" target="_blank" style="display: block; text-align: center; margin-top: 14px; font-size: 14px; color: #6b6150;">tengo una duda antes de pagar</a>
+          <button onClick="{{ pagarPersonalizado }}" style="width: 100%; margin-top: 20px; border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Enviar pedido por WhatsApp</button>
+          <a href="{{ waLink }}" target="_blank" style="display: block; text-align: center; margin-top: 14px; font-size: 14px; color: #6b6150;">o escríbeme si tienes una duda</a>
         </div>
       </div>
     </section>
@@ -795,14 +795,14 @@
   <sc-if value="{{ esGracias }}" hint-placeholder-val="{{ false }}">
     <section style="padding: clamp(36px, 5vw, 60px) 0 clamp(64px, 8vw, 110px); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(32px, 4vw, 56px); align-items: center;">
       <div>
-        <span style="display: inline-block; padding: 8px 16px; border-radius: 999px; background: #e8dfae; color: #6f6119; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;">Pago recibido</span>
-        <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(44px, 8vw, 74px); line-height: .98; margin: 24px 0 0;">¡Gracias por<br><span style="color: #af9d36;">tu compra!</span></h1>
-        <p style="font-size: 19px; line-height: 1.6; color: #554c3a; max-width: 480px; margin: 22px 0 0;">Ya tengo tu pedido. El último paso es platicar tu diseño: nombre, colores, frase o la referencia que traes guardada.</p>
+        <span style="display: inline-block; padding: 8px 16px; border-radius: 999px; background: #e8dfae; color: #6f6119; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;">Pedido listo para enviar</span>
+        <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(44px, 8vw, 74px); line-height: .98; margin: 24px 0 0;">¡Ya casi<br><span style="color: #af9d36;">es tuyo!</span></h1>
+        <p style="font-size: 19px; line-height: 1.6; color: #554c3a; max-width: 480px; margin: 22px 0 0;">Se abrió WhatsApp con tu pedido escrito. Mándamelo y te confirmo el total con envío, cómo pagar y para cuándo lo tienes.</p>
         <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px;">
-          <a href="{{ waLink }}" target="_blank" style="background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#8d7c26; color:#fff8dc;">Chatea por WhatsApp para personalizar tu artículo</a>
+          <a href="{{ pedidoLink }}" target="_blank" style="background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 32px; border-radius: 999px;" style-hover="background:#8d7c26; color:#fff8dc;">Abrir WhatsApp con mi pedido</a>
           <a onClick="{{ irInicio }}" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 30px; border-radius: 999px;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Volver al inicio</a>
         </div>
-        <p style="font-size: 14px; color: #6b6150; margin: 26px 0 0;">Te escribo también por correo con el comprobante y los tiempos de entrega.</p>
+        <p style="font-size: 14px; color: #6b6150; margin: 26px 0 0;">Si tu teléfono no abrió WhatsApp solo, usa el botón de arriba: el pedido ya va escrito.</p>
       </div>
       <div style="position: relative; aspect-ratio: 1 / 1;">
         <div style="position: absolute; inset: 0; border-radius: 999px; background: #f7d0bc; overflow: hidden;">
@@ -919,6 +919,7 @@ class Component extends DCLogic {
       hojas: true,
       menuAbierto: false,
       subirVisible: false,
+      pedido: '',
       corte: CORTES[0],
       talla: 'M',
       vasoOpc: VASO_OPC[0],
@@ -1005,6 +1006,20 @@ class Component extends DCLogic {
   }
   // Todas las pantallas pasan por aquí, así que el menú se cierra solo al
   // navegar sin tener que acordarse en cada enlace.
+  // No hay pasarela de pago: el pedido se manda por WhatsApp, que es como
+  // vende Mariana y lo que el precio pide, porque lo personalizado se cotiza
+  // al ver el diseño. Devuelve el enlace para poder reintentarlo desde la
+  // pantalla final si el teléfono bloqueó la ventana emergente.
+  enviarPorWhatsapp(wa, encabezado, lineas, totales) {
+    const texto = ['¡Hola! Soy de decocraftmx.com 🌼', '', encabezado]
+      .concat(lineas)
+      .concat([''], totales.map((t) => t[0] + ': ' + t[1]))
+      .join('\n');
+    const link = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(texto);
+    window.open(link, '_blank');
+    return link;
+  }
+
   go = (screen) => {
     document.body.style.overflow = '';
     this.setState({ screen, aviso: '', menuAbierto: false });
@@ -1211,14 +1226,32 @@ class Component extends DCLogic {
       totalPersonalizadoFmt: this.fmt(PERSONALIZABLES.reduce((t, a) => t + a.precio * (s.custom[a.id] || 0), 0)),
       pagarPersonalizado: () => {
         if (PERSONALIZABLES.every((a) => !s.custom[a.id])) return;
-        this.setState({ custom: {} });
+        const lineas = PERSONALIZABLES.filter((a) => s.custom[a.id]).map((a) => {
+          const opc = a.id === 'playera' ? ' (' + (s.customOpc.corte || CORTES[0]) + ', talla ' + (s.customOpc.talla || 'M') + ')'
+            : a.id === 'vaso' ? ' (' + (s.customOpc.vaso || VASO_OPC[0]) + ')' : '';
+          return '• ' + s.custom[a.id] + ' × ' + a.nombre + opc + ' — ' + this.fmt(a.precio * s.custom[a.id]);
+        });
+        const total = PERSONALIZABLES.reduce((t, a) => t + a.precio * (s.custom[a.id] || 0), 0);
+        const link = this.enviarPorWhatsapp(wa, 'Quiero pedir personalizados:', lineas, [
+          ['Total', this.fmt(total)]
+        ]);
+        this.setState({ custom: {}, pedido: link });
         this.go('gracias');
       },
       pagarCarrito: () => {
-        this.setState({ carrito: {} });
+        if (!items.length) return;
+        const lineas = items.map((it) => '• ' + it.qty + ' × ' + it.nombre + (it.opciones ? ' (' + it.opciones + ')' : '') + ' — ' + it.subtotalFmt);
+        const link = this.enviarPorWhatsapp(wa, 'Quiero pedir esto:', lineas, [
+          ['Productos', this.fmt(subtotal)],
+          ['Envío', envio === 0 ? 'Gratis' : this.fmt(envio)],
+          ['Total', this.fmt(subtotal + envio)]
+        ]);
+        this.setState({ carrito: {}, pedido: link });
         this.persist(null, {});
         this.go('gracias');
       },
+      // Respaldo por si se llega a "gracias" sin pedido (recarga, por ejemplo).
+      pedidoLink: s.pedido || ('https://wa.me/' + wa + '?text=' + encodeURIComponent('¡Hola! Quiero hacer un pedido 🌼')),
       mostrarTicker: this.props.mostrarTicker !== false,
       hojas: s.hojas && this.props.hojasOtono !== false,
       waLink: 'https://wa.me/' + wa + '?text=' + encodeURIComponent('¡Hola! Quiero algo personalizado 🌼'),
