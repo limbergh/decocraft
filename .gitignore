@@ -1,2 +1,6 @@
 .thumbnail
 node_modules/
+
+# Estado en vivo del sitio, no del repo: lo escribe el panel en el servidor.
+site/catalogo.json
+site/img/subidas/
