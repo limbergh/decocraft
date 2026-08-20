@@ -89,6 +89,36 @@
   .dc-subir:hover { background: #8d7c26; }
   .dc-subir svg { transition: transform .2s; }
   .dc-subir:hover svg { transform: translateY(-3px); }
+
+  /* ── Pie de página ─────────────────────────────────────────────────────
+     El auto-fit del footer pide 180px por columna: en un teléfono de 375px
+     no alcanza para dos, colapsaba a una sola y el pie quedaba larguísimo.
+     Aquí se fuerzan dos columnas y la marca cruza las dos, porque su párrafo
+     no se lee bien en 160px. El hueco de abajo es para que el botón de subir
+     no tape los últimos enlaces. */
+  .dc-footer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 40px;
+    padding: 60px 0 70px;
+    border-top: 1.5px solid rgba(36,31,22,.1);
+    margin-top: 40px;
+  }
+  @media (max-width: 620px) {
+    .dc-footer {
+      grid-template-columns: 1fr 1fr;
+      gap: 30px 18px;
+      padding: 44px 0 88px;
+    }
+    .dc-footer > :first-child { grid-column: 1 / -1; }
+    /* La última columna son las redes: en fila ocupan un renglón en vez de
+       cuatro, y de paso llenan el hueco que dejaba la rejilla de dos. */
+    .dc-footer > :last-child { grid-column: 1 / -1; }
+    .dc-footer > :last-child > div:last-child {
+      grid-auto-flow: column;
+      justify-content: start;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .dc-nav, .dc-subir, .dc-subir svg { transition: none; }
   }
@@ -708,7 +738,7 @@
     </section>
   </sc-if>
 
-  <footer style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 40px; padding: 60px 0 70px; border-top: 1.5px solid rgba(36,31,22,.1); margin-top: 40px;">
+  <footer class="dc-footer">
     <div>
       <img src="assets/logo.png" alt="DecoCraft" style="width: 64px; height: 64px; object-fit: contain;">
       <p style="font-size: 15px; line-height: 1.6; color: #6b6150; max-width: 260px; margin: 16px 0 0;">Papelería creativa y artículos personalizados, hechos de a poquito y con calma.</p>
