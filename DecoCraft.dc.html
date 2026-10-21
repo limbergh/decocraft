@@ -210,7 +210,7 @@
     </nav>
     <div style="display: flex; align-items: center; gap: 10px;">
       <sc-if value="{{ esPanel }}" hint-placeholder-val="{{ true }}">
-        <button onClick="{{ irAdmin }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#e8dfae; border-color:#e8dfae;">Mi panel</button>
+        <button onClick="{{ panelIr }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#e8dfae; border-color:#e8dfae;">{{ panelTexto }}</button>
       </sc-if>
       <button onClick="{{ irCarrito }}" style="display: flex; align-items: center; gap: 9px; border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 12px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">
         Bolsa
@@ -878,7 +878,10 @@ class Component extends DCLogic {
     super(p);
     this.railRef = React.createRef();
     this.state = {
-      screen: 'inicio',
+      // En mipanel.decocraftmx.com se entra directo a la administración: ahí
+      // nadie llega a comprar, llega a trabajar. La tienda sigue a un clic,
+      // por el logo o por el botón del encabezado.
+      screen: ES_PANEL ? 'admin' : 'inicio',
       productos: SEED,
       carrito: {},
       catFiltro: 'Todo',
@@ -905,6 +908,9 @@ class Component extends DCLogic {
       const c = JSON.parse(localStorage.getItem(KEY_C) || 'null');
       if (c && typeof c === 'object') this.setState({ carrito: c });
     } catch (e) {}
+    // Misma página en los dos dominios, pero la pestaña no debe decir lo
+    // mismo: ayuda a distinguirlas cuando están abiertas a la vez.
+    if (ES_PANEL) document.title = 'Panel · DecoCraft';
     this.cargarCatalogo();
     this.observe();
     this._hojas = setTimeout(() => this.setState({ hojas: false }), 21000);
@@ -1138,6 +1144,10 @@ class Component extends DCLogic {
       esCarrito: s.screen === 'carrito',
       esAdmin: s.screen === 'admin',
       esPanel: ES_PANEL,
+      // El mismo botón de ida y vuelta: desde la administración lleva a ver la
+      // tienda como la ve una clienta, y desde la tienda regresa al panel.
+      panelTexto: s.screen === 'admin' ? 'Ver la tienda' : 'Mi panel',
+      panelIr: () => this.go(s.screen === 'admin' ? 'inicio' : 'admin'),
       claseNav: s.menuAbierto ? 'dc-nav abierto' : 'dc-nav',
       claseVelo: s.menuAbierto ? 'dc-velo abierto' : 'dc-velo',
       claseSubir: s.subirVisible ? 'dc-subir visible' : 'dc-subir',
