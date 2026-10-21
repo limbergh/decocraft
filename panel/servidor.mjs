@@ -1,26 +1,38 @@
 // API del panel de DecoCraft — mipanel.decocraftmx.com
 //
-// Solo hace dos cosas: guardar el catálogo y recibir fotos de producto.
-// El catálogo se escribe como archivo estático (catalogo.json) dentro de la
-// raíz del sitio, así que las visitas normales lo leen desde nginx y este
-// proceso no toca el tráfico público.
+// Hace tres cosas: la sesión (entrar, salir, comprobar), guardar el catálogo
+// y recibir fotos de producto. El catálogo se escribe como archivo estático
+// (catalogo.json) dentro de la raíz del sitio, así que las visitas normales
+// lo leen desde nginx y este proceso no toca el tráfico público.
 //
-// El login NO se valida aquí: nginx protege el subdominio entero con
-// auth_basic y este proceso solo escucha en 127.0.0.1, así que nada llega
-// sin haber pasado por la contraseña.
+// La sesión sustituye al auth_basic que había antes. Con auth_basic el login
+// era la ventanita del navegador: no se puede maquillar, no se puede explicar
+// nada si fallas, y no existe cerrar sesión, porque el navegador reenvía la
+// contraseña en cada petición y la única forma de olvidarla es cerrarlo todo.
+//
+// nginx sigue siendo el portero: pregunta por cada petición a /api/sesion
+// (auth_request) y manda a /entrar a quien no traiga cookie válida. Aquí se
+// comprueba otra vez en las rutas que escriben, para no depender de que la
+// configuración de nginx siga siendo la correcta mañana.
 import { createServer } from 'node:http';
 import { writeFile, rename, mkdir } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHmac, scryptSync, timingSafeEqual } from 'node:crypto';
 
 const RAIZ = process.env.DECOCRAFT_RAIZ || '/var/www/decocraftmx.com';
 const PUERTO = Number(process.env.DECOCRAFT_PUERTO || 8500);
+const CUENTA = process.env.DECOCRAFT_CUENTA || '/etc/decocraft/panel.json';
 const CATALOGO = join(RAIZ, 'catalogo.json');
 const DIR_SUBIDAS = join(RAIZ, 'img', 'subidas');
 
 const MAX_JSON = 2 * 1024 * 1024; // 2 MB de catálogo es muchísimo texto
 const MAX_IMG = 8 * 1024 * 1024;
 const MAX_PRODUCTOS = 500;
+const GALLETA = 'decocraft_sesion';
+const DURACION = 30 * 24 * 60 * 60 * 1000; // 30 días: es su teléfono
+const MAX_INTENTOS = 10;
+const CASTIGO = 15 * 60 * 1000;
 
 // Firmas de archivo, no el content-type: el header lo escribe el cliente.
 const FIRMAS = [
@@ -31,6 +43,79 @@ const FIRMAS = [
 ];
 
 const texto = (v, max) => String(v ?? '').slice(0, max);
+
+// ── Sesión ─────────────────────────────────────────────────────────────────
+
+// Se relee en cada intento en vez de cachearse: cambiar la contraseña no
+// debería obligar a reiniciar el servicio.
+const cuenta = () => JSON.parse(readFileSync(CUENTA, 'utf8'));
+
+// Comparar con === se delata por el tiempo que tarda: cuantos más caracteres
+// acierta quien lo intenta, más tarda en fallar. timingSafeEqual siempre tarda
+// lo mismo, pero exige que los dos lados midan igual.
+function igual(a, b) {
+  const x = Buffer.from(String(a));
+  const y = Buffer.from(String(b));
+  return x.length === y.length && timingSafeEqual(x, y);
+}
+
+const firmar = (datos) => createHmac('sha256', cuenta().secreto).update(datos).digest('base64url');
+
+// La sesión no se guarda en ningún lado: el propio vale lleva dentro quién es
+// y hasta cuándo vale, firmado. Sin la firma no se puede fabricar uno.
+function crearSesion(usuario) {
+  const datos = Buffer.from(JSON.stringify({ usuario, expira: Date.now() + DURACION })).toString('base64url');
+  return datos + '.' + firmar(datos);
+}
+
+function sesionValida(vale) {
+  const [datos, firma] = String(vale || '').split('.');
+  if (!datos || !firma || !igual(firma, firmar(datos))) return false;
+  try {
+    const { expira } = JSON.parse(Buffer.from(datos, 'base64url').toString('utf8'));
+    return typeof expira === 'number' && Date.now() < expira;
+  } catch {
+    return false;
+  }
+}
+
+function galleta(req) {
+  const par = (req.headers.cookie || '').split(';').map((s) => s.trim()).find((s) => s.startsWith(GALLETA + '='));
+  return par ? par.slice(GALLETA.length + 1) : '';
+}
+
+const autenticado = (req) => sesionValida(galleta(req));
+
+// HttpOnly para que ningún script pueda leerla, Secure para que no viaje en
+// claro, Lax para que llegue al entrar por un enlace pero no desde otro sitio.
+const ponerGalleta = (vale, segundos) =>
+  `${GALLETA}=${vale}; Path=/; Max-Age=${segundos}; HttpOnly; Secure; SameSite=Lax`;
+
+// Frenar la fuerza bruta: no es una fortaleza, pero convierte "probar un
+// millón de contraseñas" en algo que no se puede hacer en una tarde.
+const intentos = new Map();
+function castigado(ip) {
+  const r = intentos.get(ip);
+  if (!r) return false;
+  if (Date.now() > r.hasta) { intentos.delete(ip); return false; }
+  return r.n >= MAX_INTENTOS;
+}
+function fallo(ip) {
+  const r = intentos.get(ip) || { n: 0, hasta: Date.now() + CASTIGO };
+  r.n += 1;
+  intentos.set(ip, r);
+}
+
+function claveCorrecta(usuario, clave) {
+  const c = cuenta();
+  // Se calculan los dos siempre, sin cortocircuito, para no filtrar por el
+  // tiempo de respuesta si el usuario existe o no.
+  const usuarioOk = igual(usuario, c.usuario);
+  const claveOk = igual(scryptSync(String(clave ?? ''), c.sal, 64).toString('base64'), c.hash);
+  return usuarioOk && claveOk;
+}
+
+// ── Catálogo ───────────────────────────────────────────────────────────────
 
 // Se reescribe cada producto campo por campo: lo que mande el navegador nunca
 // se guarda tal cual.
@@ -76,15 +161,43 @@ async function guardarAtomico(ruta, contenido) {
   await rename(tmp, ruta);
 }
 
-const responder = (res, codigo, cuerpo) => {
-  const json = JSON.stringify(cuerpo);
-  res.writeHead(codigo, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
-  res.end(json);
+const responder = (res, codigo, cuerpo, cabeceras = {}) => {
+  res.writeHead(codigo, Object.assign({ 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }, cabeceras));
+  res.end(JSON.stringify(cuerpo));
 };
 
 const servidor = createServer(async (req, res) => {
   const ruta = new URL(req.url, 'http://x').pathname;
+  const ip = req.headers['x-real-ip'] || req.socket.remoteAddress || '?';
   try {
+    // nginx pregunta aquí por cada petición antes de servir nada.
+    if (ruta === '/api/sesion') {
+      return autenticado(req) ? responder(res, 200, { ok: true }) : responder(res, 401, { error: 'Sin sesión' });
+    }
+
+    if (req.method === 'POST' && ruta === '/api/entrar') {
+      if (castigado(ip)) return responder(res, 429, { error: 'Demasiados intentos. Espera 15 minutos y vuelve a probar.' });
+      const { usuario, clave } = JSON.parse((await leerCuerpo(req, 4096)).toString('utf8') || '{}');
+      if (!claveCorrecta(usuario, clave)) {
+        fallo(ip);
+        console.log(`entrada fallida desde ${ip}`);
+        // El mismo mensaje para usuario inexistente y contraseña mala: decir
+        // cuál de los dos falló le regala la mitad del trabajo a quien prueba.
+        return responder(res, 401, { error: 'Correo o contraseña incorrectos.' });
+      }
+      intentos.delete(ip);
+      console.log(`entrada correcta desde ${ip}`);
+      return responder(res, 200, { ok: true }, { 'set-cookie': ponerGalleta(crearSesion(usuario), DURACION / 1000) });
+    }
+
+    if (req.method === 'POST' && ruta === '/api/salir') {
+      return responder(res, 200, { ok: true }, { 'set-cookie': ponerGalleta('', 0) });
+    }
+
+    // De aquí para abajo se escribe en el disco: nginx ya lo filtró, pero se
+    // comprueba igual para no depender solo de su configuración.
+    if (!autenticado(req)) return responder(res, 401, { error: 'Sin sesión' });
+
     if (req.method === 'PUT' && ruta === '/api/catalogo') {
       const cuerpo = await leerCuerpo(req, MAX_JSON);
       const productos = limpiarProductos(JSON.parse(cuerpo.toString('utf8')));

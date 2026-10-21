@@ -69,9 +69,17 @@ mipanel.decocraftmx.com                 decocraftmx.com
                                     la tienda lo lee como archivo <-----+
 ```
 
-- **Login** `auth_basic` de nginx contra `/etc/nginx/decocraft.htpasswd`
-  (bcrypt, fuera del repo). Para cambiar la contraseña:
-  `htpasswd -B /etc/nginx/decocraft.htpasswd marianaherreralugo7@gmail.com`
+- **Login** página propia en `/entrar`, con sesión en cookie firmada
+  (HttpOnly, Secure, SameSite=Lax, 30 días). nginx pregunta por cada petición
+  al servicio si la cookie vale (`auth_request`) y manda a `/entrar` a quien
+  no traiga una. Dentro del panel hay **Cerrar sesión**.
+- **La cuenta** vive en `/etc/decocraft/panel.json` (fuera del repo): usuario,
+  el scrypt de la contraseña con su sal, y el secreto que firma las sesiones.
+  Para cambiarla, en el VPS como root:
+  `node /opt/decocraft-panel/credenciales.mjs marianaherreralugo7@gmail.com`
+  La pide sin mostrarla y no hace falta reiniciar nada. Conserva el secreto,
+  así que no echa fuera a quien ya estaba dentro en otro dispositivo.
+- **Diez intentos fallidos** por IP dejan esa IP fuera 15 minutos.
 - **Servicio** `systemctl status decocraft-panel` · logs con
   `journalctl -u decocraft-panel -f`. Solo escucha en 127.0.0.1 y solo puede
   escribir dentro de `/var/www/decocraftmx.com`.

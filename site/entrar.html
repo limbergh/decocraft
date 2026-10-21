@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar · Panel DecoCraft</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#fff8dc">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100svh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px 16px;
+    background: #fff8dc; color: #241f16;
+    font-family: "Figtree", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .tarjeta { width: 100%; max-width: 420px; }
+  .marca { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+  .marca img { width: 52px; height: 52px; object-fit: contain; }
+  .marca span { font-family: "Caprasimo", serif; font-size: 21px; color: #af9d36; }
+  h1 { font-family: "Caprasimo", serif; font-weight: 400; font-size: clamp(34px, 9vw, 44px); line-height: 1.05; margin: 0; }
+  h1 em { font-style: normal; color: #af9d36; }
+  .intro { font-size: 16px; line-height: 1.55; color: #6b6150; margin: 14px 0 30px; }
+  label { display: block; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #6b6150; margin-bottom: 8px; }
+  input {
+    width: 100%; font-family: inherit; font-size: 16px; color: #241f16;
+    background: #fff; border: 1.5px solid rgba(36,31,22,.16); border-radius: 16px;
+    padding: 15px 18px; margin-bottom: 20px;
+  }
+  input:focus { outline: 2px solid #af9d36; outline-offset: 2px; border-color: #af9d36; }
+  button {
+    width: 100%; font-family: inherit; font-size: 16px; font-weight: 700;
+    color: #fff8dc; background: #af9d36; border: none; border-radius: 999px;
+    padding: 17px; cursor: pointer; transition: background .2s;
+  }
+  button:hover:not(:disabled) { background: #8d7c26; }
+  button:disabled { opacity: .6; cursor: default; }
+  .aviso {
+    display: none; margin-bottom: 20px; padding: 14px 18px; border-radius: 16px;
+    background: #f7d0bc; color: #8a5a3c; font-size: 15px; line-height: 1.45;
+  }
+  .aviso.visible { display: block; }
+  .pie { font-size: 14px; color: #6b6150; margin: 26px 0 0; text-align: center; }
+  .pie a { color: #8d7c26; text-decoration: none; font-weight: 600; }
+  .pie a:hover { color: #6f6119; }
+</style>
+</head>
+<body>
+  <main class="tarjeta">
+    <div class="marca">
+      <img src="/assets/logo.webp" alt="">
+      <span>DecoCraft</span>
+    </div>
+
+    <h1>Hola,<br><em>Mariana</em></h1>
+    <p class="intro">Entra para administrar los productos de la tienda.</p>
+
+    <p class="aviso" id="aviso" role="alert"></p>
+
+    <form id="form" autocomplete="on">
+      <label for="usuario">Correo</label>
+      <input id="usuario" name="username" type="email" autocomplete="username" required
+             inputmode="email" autocapitalize="none" spellcheck="false" placeholder="tucorreo@gmail.com">
+
+      <label for="clave">Contraseña</label>
+      <input id="clave" name="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+
+      <button type="submit" id="boton">Entrar</button>
+    </form>
+
+    <p class="pie"><a href="https://decocraftmx.com/">← Ir a la tienda</a></p>
+  </main>
+
+<script>
+  var form = document.getElementById('form');
+  var boton = document.getElementById('boton');
+  var aviso = document.getElementById('aviso');
+
+  function error(mensaje) {
+    aviso.textContent = mensaje;
+    aviso.classList.add('visible');
+    boton.disabled = false;
+    boton.textContent = 'Entrar';
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    aviso.classList.remove('visible');
+    boton.disabled = true;
+    boton.textContent = 'Entrando…';
+
+    fetch('/api/entrar', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        usuario: document.getElementById('usuario').value.trim(),
+        clave: document.getElementById('clave').value
+      })
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) return error(res.d.error || 'No se pudo entrar.');
+        // replace y no href: así el botón "atrás" no regresa al formulario.
+        location.replace('/');
+      })
+      .catch(function () { error('No hay conexión. Revísala y vuelve a intentarlo.'); });
+  });
+</script>
+</body>
+</html>
