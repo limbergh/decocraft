@@ -130,6 +130,15 @@ function limpiarProductos(datos) {
       categoria: texto(p.categoria, 60),
       // Se admiten centavos (99.50), pero no precios negativos ni NaN.
       precio: Number.isFinite(Number(p.precio)) ? Math.max(0, Math.round(Number(p.precio) * 100) / 100) : 0,
+      // El precio anterior solo vale si es MAYOR que el de hoy. Si no lo es se
+      // guarda en cero, o sea sin rebaja: el sitio no puede acabar enseñando
+      // un descuento que no existe aunque alguien fuerce la petición.
+      precioAntes: (() => {
+        const antes = Number(p.precioAntes);
+        const hoy = Number(p.precio);
+        if (!Number.isFinite(antes) || !Number.isFinite(hoy) || antes <= hoy) return 0;
+        return Math.round(antes * 100) / 100;
+      })(),
       desc: texto(p.desc, 600),
       badge: texto(p.badge, 40),
       img: texto(p.img, 300),

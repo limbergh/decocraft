@@ -11,10 +11,11 @@ PANEL=/opt/decocraft-panel
 cd "$(dirname "$0")"
 node build.mjs
 
-# tar sobre ssh: solo sobrescribe los archivos del build, así que catalogo.json
-# y las fotos que subió Mariana (img/subidas/) se quedan donde están.
+# El catálogo y las fotos subidas son del sitio en vivo, no del build: se
+# excluyen del tar para que una copia local de pruebas no pise lo que hay
+# publicado. El resto sí se sobrescribe, que para eso es el deploy.
 echo "→ subiendo site/ a ${VPS_HOST}:${DESTINO}"
-tar -czf - -C site . | ssh -i "$VPS_KEY" "${VPS_USER}@${VPS_HOST}" \
+tar --exclude=./catalogo.json --exclude=./img/subidas --exclude=./img/resenas -czf - -C site . | ssh -i "$VPS_KEY" "${VPS_USER}@${VPS_HOST}" \
   "mkdir -p ${DESTINO} && tar -xzf - -C ${DESTINO} && chown -R www-data:www-data ${DESTINO}"
 
 echo "→ actualizando la API del panel"

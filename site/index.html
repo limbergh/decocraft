@@ -328,7 +328,15 @@
                 <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ p.categoria }}</div>
                 <div onClick="{{ p.abrir }}" style="font-family: 'Caprasimo', serif; font-size: 20px; margin-top: 8px; line-height: 1.2; cursor: pointer;">{{ p.nombre }}</div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
-                  <span style="font-size: 18px; font-weight: 700;">{{ p.precioFmt }}</span>
+                  <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+                    <sc-if value="{{ p.rebaja }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size: 14px; font-weight: 600; color: #8b8370; text-decoration: line-through;">{{ p.precioAntesFmt }}</span>
+                    </sc-if>
+                    <span style="font-size: 19px; font-weight: 700;">{{ p.precioFmt }}</span>
+                    <sc-if value="{{ p.rebaja }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size: 12px; font-weight: 700; letter-spacing: .02em; color: #fff8dc; background: #c67139; padding: 4px 9px; border-radius: 999px;">{{ p.descuentoPct }}</span>
+                    </sc-if>
+                  </div>
                   <button onClick="{{ p.agregar }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">{{ p.textoAgregar }}</button>
                 </div>
               </div>
@@ -465,7 +473,15 @@
                   <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #af9d36;">{{ p.categoria }}</div>
                   <div onClick="{{ p.abrir }}" style="font-family: 'Caprasimo', serif; font-size: 20px; margin-top: 8px; line-height: 1.2; cursor: pointer;">{{ p.nombre }}</div>
                   <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
-                    <span style="font-size: 18px; font-weight: 700;">{{ p.precioFmt }}</span>
+                    <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+                    <sc-if value="{{ p.rebaja }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size: 14px; font-weight: 600; color: #8b8370; text-decoration: line-through;">{{ p.precioAntesFmt }}</span>
+                    </sc-if>
+                    <span style="font-size: 19px; font-weight: 700;">{{ p.precioFmt }}</span>
+                    <sc-if value="{{ p.rebaja }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size: 12px; font-weight: 700; letter-spacing: .02em; color: #fff8dc; background: #c67139; padding: 4px 9px; border-radius: 999px;">{{ p.descuentoPct }}</span>
+                    </sc-if>
+                  </div>
                     <button onClick="{{ p.agregar }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 14px; font-weight: 700; padding: 11px 18px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">{{ p.textoAgregar }}</button>
                   </div>
                 </div>
@@ -497,8 +513,24 @@
         <div>
           <span style="font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #af9d36;">{{ activoCategoria }}</span>
           <h1 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(34px, 5.5vw, 50px); line-height: 1.05; margin: 12px 0 0;">{{ activoNombre }}</h1>
-          <div style="font-size: 30px; font-weight: 700; margin-top: 18px;">{{ activoPrecioFmt }}</div>
-          <p style="font-size: 17px; line-height: 1.65; color: #554c3a; margin: 18px 0 0; max-width: 480px;">{{ activoDesc }}</p>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
+            <sc-if value="{{ activoRebaja }}" hint-placeholder-val="{{ true }}">
+              <span style="font-size: 19px; font-weight: 600; color: #8b8370; text-decoration: line-through;">{{ activoPrecioAntesFmt }}</span>
+            </sc-if>
+            <span style="font-size: 34px; font-weight: 700;">{{ activoPrecioFmt }}</span>
+            <sc-if value="{{ activoRebaja }}" hint-placeholder-val="{{ true }}">
+              <span style="font-size: 14px; font-weight: 700; color: #fff8dc; background: #c67139; padding: 6px 13px; border-radius: 999px;">{{ activoDescuentoPct }}</span>
+            </sc-if>
+          </div>
+          <div style="border-top: 1.5px solid rgba(36,31,22,.12); border-bottom: 1.5px solid rgba(36,31,22,.12); margin: 24px 0 0; max-width: 480px;">
+            <button onClick="{{ alternarDesc }}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: transparent; border: none; padding: 18px 2px; font-family: inherit; font-size: 16px; font-weight: 700; color: #241f16; text-align: left; cursor: pointer;" style-hover="color:#8d7c26;">
+              Descripción
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; transform: {{ giroDesc }}; transition: transform .25s;"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+            <sc-if value="{{ descAbierta }}" hint-placeholder-val="{{ true }}">
+              <p style="font-size: 16px; line-height: 1.65; color: #554c3a; margin: 0 0 20px;">{{ activoDesc }}</p>
+            </sc-if>
+          </div>
 
           <sc-if value="{{ activoEsPlayera }}" hint-placeholder-val="{{ false }}">
             <div style="display: grid; gap: 22px; margin-top: 30px;">
@@ -521,17 +553,6 @@
             </div>
           </sc-if>
 
-          <sc-if value="{{ activoEsVaso }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top: 30px;">
-              <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Presentación</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
-                <sc-for list="{{ vasoOpciones }}" as="v" hint-placeholder-count="2">
-                  <button onClick="{{ v.elegir }}" style="border: 1.5px solid {{ v.borde }}; background: {{ v.fondo }}; color: {{ v.color }}; font-size: 15px; font-weight: 600; padding: 13px 22px; border-radius: 999px; cursor: pointer;">{{ v.nombre }}</button>
-                </sc-for>
-              </div>
-            </div>
-          </sc-if>
-
           <div style="margin-top: 30px;">
             <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150;">Cantidad</div>
             <div style="display: flex; align-items: center; gap: 14px; margin-top: 12px;">
@@ -543,7 +564,6 @@
 
           <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px;">
             <button onClick="{{ agregarActivo }}" style="border: none; background: #af9d36; color: #fff8dc; font-size: 16px; font-weight: 700; padding: 17px 34px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Agregar a la bolsa</button>
-            <a href="{{ waLinkProducto }}" target="_blank" style="border: 1.5px solid #af9d36; color: #6f6119; font-size: 16px; font-weight: 700; padding: 16px 30px; border-radius: 999px;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Lo quiero personalizado</a>
           </div>
 
           <div style="display: grid; gap: 12px; margin-top: 36px; border-top: 1.5px solid rgba(36,31,22,.12); padding-top: 26px;">
@@ -675,8 +695,12 @@
               </select>
             </label>
             <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
-              Precio (MXN)
+              Precio de hoy (MXN)
               <input value="{{ formPrecio }}" onChange="{{ onFormPrecio }}" placeholder="260" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
+            </label>
+            <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
+              Precio anterior (opcional)
+              <input value="{{ formPrecioAntes }}" onChange="{{ onFormPrecioAntes }}" placeholder="Déjalo vacío si no hay rebaja" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
             </label>
             <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
               Descripción
@@ -749,13 +773,6 @@
                         <button onClick="{{ t.elegir }}" style="min-width: 48px; border: 1.5px solid {{ t.borde }}; background: {{ t.fondo }}; color: {{ t.color }}; font-size: 14px; font-weight: 700; padding: 10px 14px; border-radius: 999px; cursor: pointer;">{{ t.nombre }}</button>
                       </sc-for>
                     </div>
-                  </div>
-                </sc-if>
-                <sc-if value="{{ a.esVaso }}" hint-placeholder-val="{{ false }}">
-                  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;">
-                    <sc-for list="{{ a.vasoOpciones }}" as="v" hint-placeholder-count="2">
-                      <button onClick="{{ v.elegir }}" style="border: 1.5px solid {{ v.borde }}; background: {{ v.fondo }}; color: {{ v.color }}; font-size: 14px; font-weight: 600; padding: 10px 18px; border-radius: 999px; cursor: pointer;">{{ v.nombre }}</button>
-                    </sc-for>
                   </div>
                 </sc-if>
               </div>
@@ -892,7 +909,9 @@ const PERSONALIZABLES = [
 ];
 const CORTES = ['Corte normal', 'Oversize'];
 const TALLAS = { 'Corte normal': ['XS', 'S', 'M', 'L', 'XL', 'XXL'], 'Oversize': ['S', 'M', 'L', 'XL'] };
-const VASO_OPC = ['Vaso con popote y tapa', 'Solo vaso'];
+// Presentación única: el vaso no se vende suelto. Al quedar una sola opción
+// deja de ser una elección y pasa a ser un dato del producto.
+const VASO_INCLUYE = 'Popote y tapa de bambú';
 const esPlayera = (cat) => cat === 'Playeras';
 const esVaso = (cat) => cat === 'Vasos y termos';
 const KEY_C = 'decocraft.carrito.v1';
@@ -924,11 +943,11 @@ class Component extends DCLogic {
       menuAbierto: false,
       subirVisible: false,
       pedido: '',
+      descAbierta: false,
       corte: CORTES[0],
       talla: 'M',
-      vasoOpc: VASO_OPC[0],
       customOpc: {},
-      form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true }
+      form: { nombre: '', categoria: CATS[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true }
     };
   }
   componentDidMount() {
@@ -1034,6 +1053,14 @@ class Component extends DCLogic {
   };
   tono(i) { return TONOS[i % TONOS.length]; }
   fmt(n) { return '$' + Number(n || 0).toLocaleString('es-MX'); }
+  // Solo hay rebaja si el precio anterior es MAYOR que el de hoy. Un precio
+  // anterior más barato no es una oferta, es un adorno: ni se dibuja.
+  rebaja(p) {
+    const antes = Number(p.precioAntes || 0);
+    const hoy = Number(p.precio || 0);
+    if (!(antes > hoy) || hoy <= 0) return null;
+    return { antesFmt: this.fmt(antes), pct: Math.round((1 - hoy / antes) * 100) };
+  }
 
   add = (id, qty, opciones) => {
     const key = opciones ? id + '::' + opciones : id;
@@ -1053,7 +1080,7 @@ class Component extends DCLogic {
     if (qty <= 0) delete custom[id]; else custom[id] = qty;
     this.setState({ custom });
   };
-  abrir = (id) => { this.setState({ activoId: id, cantidad: 1, screen: 'producto' }); window.scrollTo(0, 0); };
+  abrir = (id) => { this.setState({ activoId: id, cantidad: 1, descAbierta: false, screen: 'producto' }); window.scrollTo(0, 0); };
 
   onDragStart = (e) => {
     const el = this.railRef.current;
@@ -1079,9 +1106,9 @@ class Component extends DCLogic {
       .then((d) => { this.setForm('img', d.url); this.setState({ aviso: '' }); })
       .catch((err) => this.setState({ aviso: 'No se pudo subir la foto: ' + err.message }));
   };
-  nuevo = () => this.setState({ editId: null, aviso: '', form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true } });
+  nuevo = () => this.setState({ editId: null, aviso: '', form: { nombre: '', categoria: CATS[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true } });
   editar = (p) => {
-    this.setState({ editId: p.id, aviso: '', form: { nombre: p.nombre, categoria: p.categoria, precio: String(p.precio), desc: p.desc, badge: p.badge || '', img: p.img || '', activo: p.activo !== false } });
+    this.setState({ editId: p.id, aviso: '', form: { nombre: p.nombre, categoria: p.categoria, precio: String(p.precio), precioAntes: p.precioAntes ? String(p.precioAntes) : '', desc: p.desc, badge: p.badge || '', img: p.img || '', activo: p.activo !== false } });
     window.scrollTo(0, 0);
   };
   borrar = (id) => {
@@ -1094,10 +1121,14 @@ class Component extends DCLogic {
   guardar = () => {
     const f = this.state.form;
     if (!f.nombre.trim() || !String(f.precio).trim()) { this.setState({ aviso: 'Falta el nombre o el precio.' }); return; }
+    const antes = Number(String(f.precioAntes || '').replace(/[^0-9.]/g, '')) || 0;
+    const hoy = Number(String(f.precio).replace(/[^0-9.]/g, '')) || 0;
+    if (antes && antes <= hoy) { this.setState({ aviso: 'El precio anterior tiene que ser mayor que el de hoy, si no no hay rebaja que mostrar.' }); return; }
     const base = {
       nombre: f.nombre.trim(),
       categoria: f.categoria,
       precio: Number(String(f.precio).replace(/[^0-9.]/g, '')) || 0,
+      precioAntes: Number(String(f.precioAntes || '').replace(/[^0-9.]/g, '')) || 0,
       desc: f.desc.trim(),
       badge: f.badge.trim(),
       img: f.img,
@@ -1110,7 +1141,7 @@ class Component extends DCLogic {
     } else {
       productos = [Object.assign({ id: 'p' + Date.now() }, base)].concat(this.state.productos);
     }
-    this.setState({ productos, editId: null, aviso: this.state.editId ? 'Cambios guardados.' : 'Producto publicado.', form: { nombre: '', categoria: CATS[0], precio: '', desc: '', badge: '', img: '', activo: true } });
+    this.setState({ productos, editId: null, aviso: this.state.editId ? 'Cambios guardados.' : 'Producto publicado.', form: { nombre: '', categoria: CATS[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true } });
     this.persist(productos, null);
   };
 
@@ -1121,14 +1152,17 @@ class Component extends DCLogic {
     desc: p.desc,
     badge: p.badge || '',
     precioFmt: this.fmt(p.precio),
+    rebaja: !!this.rebaja(p),
+    precioAntesFmt: this.rebaja(p) ? this.rebaja(p).antesFmt : '',
+    descuentoPct: this.rebaja(p) ? '−' + this.rebaja(p).pct + '%' : '',
     tono: this.tono(i),
     slot: p.slot || 'foto de producto',
     img: p.img || FOTO_CAT[p.categoria] || '',
     tieneImg: !!(p.img || FOTO_CAT[p.categoria]),
     sinImg: !(p.img || FOTO_CAT[p.categoria]),
     abrir: () => this.abrir(p.id),
-    agregar: () => (esPlayera(p.categoria) || esVaso(p.categoria) ? this.abrir(p.id) : this.add(p.id, 1)),
-    textoAgregar: esPlayera(p.categoria) || esVaso(p.categoria) ? 'Elegir' : 'Agregar'
+    agregar: () => (esPlayera(p.categoria) ? this.abrir(p.id) : this.add(p.id, 1)),
+    textoAgregar: esPlayera(p.categoria) ? 'Elegir' : 'Agregar'
   });
 
   renderVals() {
@@ -1226,18 +1260,11 @@ class Component extends DCLogic {
           borde: (s.customOpc.talla || 'M') === t ? '#af9d36' : 'rgba(36,31,22,.16)',
           elegir: () => this.setState((st) => ({ customOpc: Object.assign({}, st.customOpc, { talla: t }) }))
         })),
-        vasoOpciones: VASO_OPC.map((v) => ({
-          nombre: v,
-          fondo: (s.customOpc.vaso || VASO_OPC[0]) === v ? '#af9d36' : 'transparent',
-          color: (s.customOpc.vaso || VASO_OPC[0]) === v ? '#fff8dc' : '#554c3a',
-          borde: (s.customOpc.vaso || VASO_OPC[0]) === v ? '#af9d36' : 'rgba(36,31,22,.16)',
-          elegir: () => this.setState((st) => ({ customOpc: Object.assign({}, st.customOpc, { vaso: v }) }))
-        })),
         mas: () => this.setCustom(a.id, (s.custom[a.id] || 0) + 1),
         menos: () => this.setCustom(a.id, (s.custom[a.id] || 0) - 1)
       })),
       resumenPersonalizado: PERSONALIZABLES.filter((a) => s.custom[a.id]).map((a) => ({
-        linea: s.custom[a.id] + ' × ' + a.nombre + (a.id === 'playera' ? ' (' + (s.customOpc.corte || CORTES[0]) + ', ' + (s.customOpc.talla || 'M') + ')' : (a.id === 'vaso' ? ' (' + (s.customOpc.vaso || VASO_OPC[0]) + ')' : '')),
+        linea: s.custom[a.id] + ' × ' + a.nombre + (a.id === 'playera' ? ' (' + (s.customOpc.corte || CORTES[0]) + ', ' + (s.customOpc.talla || 'M') + ')' : ''),
         importe: this.fmt(a.precio * s.custom[a.id])
       })),
       personalizadoVacio: PERSONALIZABLES.every((a) => !s.custom[a.id]),
@@ -1245,8 +1272,7 @@ class Component extends DCLogic {
       pagarPersonalizado: () => {
         if (PERSONALIZABLES.every((a) => !s.custom[a.id])) return;
         const lineas = PERSONALIZABLES.filter((a) => s.custom[a.id]).map((a) => {
-          const opc = a.id === 'playera' ? ' (' + (s.customOpc.corte || CORTES[0]) + ', talla ' + (s.customOpc.talla || 'M') + ')'
-            : a.id === 'vaso' ? ' (' + (s.customOpc.vaso || VASO_OPC[0]) + ')' : '';
+          const opc = a.id === 'playera' ? ' (' + (s.customOpc.corte || CORTES[0]) + ', talla ' + (s.customOpc.talla || 'M') + ')' : '';
           return '• ' + s.custom[a.id] + ' × ' + a.nombre + opc + ' — ' + this.fmt(a.precio * s.custom[a.id]);
         });
         const total = PERSONALIZABLES.reduce((t, a) => t + a.precio * (s.custom[a.id] || 0), 0);
@@ -1308,13 +1334,18 @@ class Component extends DCLogic {
       activoCategoria: activo.categoria,
       activoDesc: activo.desc,
       activoPrecioFmt: this.fmt(activo.precio),
+      activoRebaja: !!this.rebaja(activo),
+      activoPrecioAntesFmt: this.rebaja(activo) ? this.rebaja(activo).antesFmt : '',
+      activoDescuentoPct: this.rebaja(activo) ? '−' + this.rebaja(activo).pct + '%' : '',
       activoTono: this.tono(activoIdx < 0 ? 0 : activoIdx),
       activoImg: activo.img || FOTO_CAT[activo.categoria] || '',
       activoTieneImg: !!(activo.img || FOTO_CAT[activo.categoria]),
       activoSinImg: !(activo.img || FOTO_CAT[activo.categoria]),
       activoSlot: activo.slot || 'foto de producto',
       activoEsPlayera: esPlayera(activo.categoria),
-      activoEsVaso: esVaso(activo.categoria),
+      descAbierta: s.descAbierta,
+      giroDesc: s.descAbierta ? 'rotate(180deg)' : 'none',
+      alternarDesc: () => this.setState((st) => ({ descAbierta: !st.descAbierta })),
       cortes: CORTES.map((c) => ({
         nombre: c,
         fondo: s.corte === c ? '#af9d36' : 'transparent',
@@ -1329,26 +1360,19 @@ class Component extends DCLogic {
         borde: s.talla === t ? '#af9d36' : 'rgba(36,31,22,.16)',
         elegir: () => this.setState({ talla: t })
       })),
-      vasoOpciones: VASO_OPC.map((v) => ({
-        nombre: v,
-        fondo: s.vasoOpc === v ? '#af9d36' : 'transparent',
-        color: s.vasoOpc === v ? '#fff8dc' : '#554c3a',
-        borde: s.vasoOpc === v ? '#af9d36' : 'rgba(36,31,22,.16)',
-        elegir: () => this.setState({ vasoOpc: v })
-      })),
       cantidad: s.cantidad,
       masCantidad: () => this.setState((st) => ({ cantidad: st.cantidad + 1 })),
       menosCantidad: () => this.setState((st) => ({ cantidad: Math.max(1, st.cantidad - 1) })),
       agregarActivo: () => {
-        const opc = esPlayera(activo.categoria) ? s.corte + ' · Talla ' + s.talla : (esVaso(activo.categoria) ? s.vasoOpc : '');
+        const opc = esPlayera(activo.categoria) ? s.corte + ' · Talla ' + s.talla : '';
         this.add(activo.id, s.cantidad, opc);
         this.go('carrito');
       },
-      detallesProducto: [
+      detallesProducto: (esVaso(activo.categoria) ? [{ k: 'Incluye', v: VASO_INCLUYE }] : []).concat([
         { k: 'Envío', v: 'A todo México, 3–5 días' },
         { k: 'Personalización', v: 'Nombre, color y frase' },
         { k: 'Mínimo', v: '1 pieza' }
-      ],
+      ]),
       carritoItems: items,
       carritoVacio: items.length === 0,
       carritoConItems: items.length > 0,
@@ -1370,6 +1394,7 @@ class Component extends DCLogic {
       formNombre: s.form.nombre,
       formCategoria: s.form.categoria,
       formPrecio: s.form.precio,
+      formPrecioAntes: s.form.precioAntes,
       formDesc: s.form.desc,
       formBadge: s.form.badge,
       formImg: s.form.img,
@@ -1379,6 +1404,7 @@ class Component extends DCLogic {
       onFormNombre: (e) => this.setForm('nombre', e.target.value),
       onFormCategoria: (e) => this.setForm('categoria', e.target.value),
       onFormPrecio: (e) => this.setForm('precio', e.target.value),
+      onFormPrecioAntes: (e) => this.setForm('precioAntes', e.target.value),
       onFormDesc: (e) => this.setForm('desc', e.target.value),
       onFormBadge: (e) => this.setForm('badge', e.target.value),
       onFormActivo: (e) => this.setForm('activo', e.target.checked),
