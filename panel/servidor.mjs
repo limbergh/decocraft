@@ -44,7 +44,17 @@ const FIRMAS = [
   { ext: 'gif', test: (b) => b.subarray(0, 6).toString('latin1').startsWith('GIF8') },
 ];
 
-const texto = (v, max) => String(v ?? '').slice(0, max);
+// Recortar en silencio fue un error caro: las descripciones de Mariana pasan
+// de 600 caracteres y el servidor se las comía al guardar, sin avisar y sin
+// vuelta atrás. Ahora un campo que no cabe hace fallar el guardado entero con
+// un mensaje que dice qué producto y qué campo, y no se escribe nada.
+const texto = (v, max, campo, producto) => {
+  const s = String(v ?? '');
+  if (s.length > max) {
+    throw new Error(`"${producto}": ${campo} tiene ${s.length} caracteres y el máximo son ${max}. Acórtalo y vuelve a guardar.`);
+  }
+  return s;
+};
 
 // ── Sesión ─────────────────────────────────────────────────────────────────
 
@@ -126,10 +136,11 @@ function limpiarProductos(datos) {
   if (datos.length > MAX_PRODUCTOS) throw new Error('Demasiados productos');
   return datos.map((p, i) => {
     if (!p || typeof p !== 'object') throw new Error(`Producto ${i} inválido`);
+    const quien = String(p.nombre || `producto ${i + 1}`).slice(0, 60);
     return {
-      id: texto(p.id, 64) || 'p' + randomUUID().slice(0, 8),
-      nombre: texto(p.nombre, 120),
-      categoria: texto(p.categoria, 60),
+      id: texto(p.id, 64, 'el identificador', quien) || 'p' + randomUUID().slice(0, 8),
+      nombre: texto(p.nombre, 120, 'el nombre', quien),
+      categoria: texto(p.categoria, 60, 'la categoría', quien),
       // Se admiten centavos (99.50), pero no precios negativos ni NaN.
       precio: Number.isFinite(Number(p.precio)) ? Math.max(0, Math.round(Number(p.precio) * 100) / 100) : 0,
       // El precio anterior solo vale si es MAYOR que el de hoy. Si no lo es se
@@ -141,11 +152,12 @@ function limpiarProductos(datos) {
         if (!Number.isFinite(antes) || !Number.isFinite(hoy) || antes <= hoy) return 0;
         return Math.round(antes * 100) / 100;
       })(),
-      desc: texto(p.desc, 600),
-      badge: texto(p.badge, 40),
-      img: texto(p.img, 300),
+      // 4000 da de sobra: las descripciones largas de Mariana rondan las 900.
+      desc: texto(p.desc, 4000, 'la descripción', quien),
+      badge: texto(p.badge, 40, 'la etiqueta', quien),
+      img: texto(p.img, 300, 'la ruta de la foto', quien),
       activo: p.activo !== false,
-      slot: texto(p.slot, 80) || 'foto de producto',
+      slot: texto(p.slot, 80, 'el texto de relleno', quien) || 'foto de producto',
     };
   });
 }
@@ -231,6 +243,15 @@ const servidor = createServer(async (req, res) => {
     if (req.method === 'PUT' && ruta === '/api/catalogo') {
       const cuerpo = await leerCuerpo(req, MAX_JSON);
       const productos = limpiarProductos(JSON.parse(cuerpo.toString('utf8')));
+      // Copia del catálogo anterior antes de pisarlo, fuera de la web. Es el
+      // único sitio donde vive la tienda: si un guardado sale mal, que haya de
+      // dónde volver.
+      try {
+        await mkdir(DATOS, { recursive: true });
+        await writeFile(join(DATOS, 'catalogo.anterior.json'), readFileSync(CATALOGO));
+      } catch {
+        // La primera vez todavía no hay catálogo que respaldar.
+      }
       await guardarAtomico(CATALOGO, JSON.stringify(productos, null, 2));
       console.log(`catálogo guardado: ${productos.length} productos`);
       return responder(res, 200, { ok: true, productos: productos.length });

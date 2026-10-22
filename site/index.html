@@ -130,6 +130,19 @@
      clavado y los productos le pasaban por encima. Sin sitio al lado, sticky
      no aporta nada, así que se apaga. Va con !important porque el position
      viene en el style de la etiqueta y si no, no hay forma de ganarle. */
+  /* Un panel pegajoso más alto que la pantalla queda atrapado: se clava arriba
+     y su parte de abajo no se alcanza hasta que termina el scroll de la
+     columna de al lado. Le pasaba al formulario de producto del panel, que es
+     largo. Con tope de altura y scroll propio, el panel corto sigue pegado
+     como antes y el largo se puede recorrer solo. */
+  @media (min-width: 901px) {
+    .dc-lateral {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+  }
+
   @media (max-width: 900px) {
     .dc-lateral {
       position: static !important;
@@ -1195,8 +1208,11 @@ class Component extends DCLogic {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(productos)
       })
-        .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); })
-        .catch(() => this.setState({ aviso: 'No se pudo guardar en el servidor. Revisa tu conexión y vuelve a intentarlo.' }));
+        // El servidor explica por qué rechazó el guardado (un campo demasiado
+        // largo, por ejemplo). Ese mensaje es el que hay que enseñar, no uno
+        // genérico que deje a Mariana sin saber qué corregir.
+        .then((r) => r.json().then((d) => { if (!r.ok) throw new Error(d.error || 'HTTP ' + r.status); }))
+        .catch((e) => this.setState({ aviso: e.message || 'No se pudo guardar. Revisa tu conexión y vuelve a intentarlo.' }));
     }
   }
   // Todas las pantallas pasan por aquí, así que el menú se cierra solo al
