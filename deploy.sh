@@ -15,11 +15,11 @@ node build.mjs
 # excluyen del tar para que una copia local de pruebas no pise lo que hay
 # publicado. El resto sí se sobrescribe, que para eso es el deploy.
 echo "→ subiendo site/ a ${VPS_HOST}:${DESTINO}"
-tar --exclude=./catalogo.json --exclude=./img/subidas --exclude=./img/resenas -czf - -C site . | ssh -i "$VPS_KEY" "${VPS_USER}@${VPS_HOST}" \
+tar --exclude=./catalogo.json --exclude=./resenas.json --exclude=./img/subidas --exclude=./img/resenas -czf - -C site . | ssh -i "$VPS_KEY" "${VPS_USER}@${VPS_HOST}" \
   "mkdir -p ${DESTINO} && tar -xzf - -C ${DESTINO} && chown -R www-data:www-data ${DESTINO}"
 
 echo "→ actualizando la API del panel"
-scp -i "$VPS_KEY" -q panel/servidor.mjs "${VPS_USER}@${VPS_HOST}:${PANEL}/servidor.mjs"
+scp -i "$VPS_KEY" -q panel/servidor.mjs panel/resenas.mjs panel/credenciales.mjs "${VPS_USER}@${VPS_HOST}:${PANEL}/"
 ssh -i "$VPS_KEY" "${VPS_USER}@${VPS_HOST}" "systemctl restart decocraft-panel && systemctl is-active decocraft-panel"
 
 echo "✓ https://decocraftmx.com  ·  https://mipanel.decocraftmx.com"

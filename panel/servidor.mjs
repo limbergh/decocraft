@@ -19,10 +19,12 @@ import { writeFile, rename, mkdir } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID, createHmac, scryptSync, timingSafeEqual } from 'node:crypto';
+import { crearResenas } from './resenas.mjs';
 
 const RAIZ = process.env.DECOCRAFT_RAIZ || '/var/www/decocraftmx.com';
 const PUERTO = Number(process.env.DECOCRAFT_PUERTO || 8500);
 const CUENTA = process.env.DECOCRAFT_CUENTA || '/etc/decocraft/panel.json';
+const DATOS = process.env.DECOCRAFT_DATOS || '/var/lib/decocraft';
 const CATALOGO = join(RAIZ, 'catalogo.json');
 const DIR_SUBIDAS = join(RAIZ, 'img', 'subidas');
 
@@ -175,10 +177,29 @@ const responder = (res, codigo, cuerpo, cabeceras = {}) => {
   res.end(JSON.stringify(cuerpo));
 };
 
+const resenas = crearResenas({ raiz: RAIZ, datos: DATOS, firmasImagen: FIRMAS });
+
 const servidor = createServer(async (req, res) => {
   const ruta = new URL(req.url, 'http://x').pathname;
   const ip = req.headers['x-real-ip'] || req.socket.remoteAddress || '?';
   try {
+    // ── Reseñas: estas dos rutas las abre la tienda pública, sin sesión.
+    // Son las únicas de todo el servicio que puede tocar un desconocido, así
+    // que validan todo y llevan freno por IP (ver resenas.mjs).
+    if (req.method === 'POST' && ruta === '/api/resena-foto') {
+      const cuerpo = await leerCuerpo(req, MAX_IMG);
+      const foto = await resenas.guardarFoto(cuerpo);
+      console.log(`foto de reseña recibida de ${ip} (${Math.round(cuerpo.length / 1024)} KB)`);
+      return responder(res, 201, { foto });
+    }
+
+    if (req.method === 'POST' && ruta === '/api/resena') {
+      const datos = JSON.parse((await leerCuerpo(req, 8192)).toString('utf8') || '{}');
+      const r = await resenas.recibir(datos, ip);
+      console.log(`reseña de ${r.nombre} sobre ${r.productoNombre} (${r.estrellas}★) pendiente de revisar`);
+      return responder(res, 201, { ok: true });
+    }
+
     // nginx pregunta aquí por cada petición antes de servir nada.
     if (ruta === '/api/sesion') {
       return autenticado(req) ? responder(res, 200, { ok: true }) : responder(res, 401, { error: 'Sin sesión' });
@@ -213,6 +234,29 @@ const servidor = createServer(async (req, res) => {
       await guardarAtomico(CATALOGO, JSON.stringify(productos, null, 2));
       console.log(`catálogo guardado: ${productos.length} productos`);
       return responder(res, 200, { ok: true, productos: productos.length });
+    }
+
+    if (req.method === 'GET' && ruta === '/api/resenas') {
+      return responder(res, 200, { pendientes: resenas.pendientes() });
+    }
+
+    // La foto de una reseña por revisar no está publicada en ningún sitio:
+    // para verla en el panel la sirve este proceso, ya con la sesión validada.
+    if (req.method === 'GET' && ruta === '/api/resenas/foto') {
+      const archivo = resenas.rutaFotoPendiente(new URL(req.url, 'http://x').searchParams.get('f'));
+      if (!archivo) return responder(res, 404, { error: 'Esa foto no está' });
+      res.writeHead(200, { 'content-type': 'image/*', 'cache-control': 'no-store' });
+      return resenas.abrirFoto(archivo).pipe(res);
+    }
+
+    if (req.method === 'POST' && (ruta === '/api/resenas/aprobar' || ruta === '/api/resenas/rechazar' || ruta === '/api/resenas/borrar')) {
+      const { id } = JSON.parse((await leerCuerpo(req, 1024)).toString('utf8') || '{}');
+      const accion = ruta.split('/').pop();
+      const hecho = accion === 'aprobar' ? await resenas.aprobar(id)
+        : accion === 'rechazar' ? await resenas.rechazar(id)
+          : await resenas.borrarPublicada(id);
+      console.log(`reseña ${id}: ${accion}`);
+      return responder(res, 200, hecho);
     }
 
     if (req.method === 'POST' && ruta === '/api/imagen') {

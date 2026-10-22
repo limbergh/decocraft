@@ -365,6 +365,7 @@
         </div>
       </section>
 
+      <sc-if value="{{ hayResenas }}" hint-placeholder-val="{{ true }}">
       <section class="rv" style="padding: 84px 0 0;">
         <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
           <div>
@@ -413,6 +414,7 @@
           </sc-for>
         </div>
       </section>
+      </sc-if>
 
       <sc-if value="{{ mostrarTicker }}" hint-placeholder-val="{{ true }}">
         <div style="overflow: hidden; margin: 46px 0 0; padding: 18px 0; border-top: 1.5px solid rgba(36,31,22,.12); border-bottom: 1.5px solid rgba(36,31,22,.12);">
@@ -576,6 +578,87 @@
           </div>
         </div>
       </div>
+
+      <section style="border-top: 1.5px solid rgba(36,31,22,.12); margin-top: clamp(40px, 6vw, 68px); padding-top: clamp(32px, 4vw, 48px);">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <h2 style="font-family: 'Caprasimo', serif; font-weight: 400; font-size: clamp(26px, 4vw, 34px); margin: 0;">Lo que dicen quienes lo compraron</h2>
+          <sc-if value="{{ activoTieneResenas }}" hint-placeholder-val="{{ true }}">
+            <span style="font-size: 15px; color: #6b6150;"><span style="color: #eaa93d;">★</span> {{ activoPromedio }} · {{ activoNumResenas }}</span>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ activoSinResenas }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size: 16px; line-height: 1.6; color: #6b6150; margin: 16px 0 0; max-width: 520px;">Todavía no hay reseñas de este producto. Si ya lo tienes en casa, cuéntanos qué tal: tu reseña aparece en cuanto la revisemos.</p>
+        </sc-if>
+
+        <div style="display: grid; gap: 18px; margin-top: 26px;">
+          <sc-for list="{{ activoResenas }}" as="r" hint-placeholder-count="2">
+            <article style="background: #fff; border-radius: 26px; padding: 24px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+              <sc-if value="{{ r.tieneFoto }}" hint-placeholder-val="{{ true }}">
+                <img src="{{ r.foto }}" alt="Foto de {{ r.nombre }}" loading="lazy" style="width: 104px; height: 104px; object-fit: cover; border-radius: 20px; flex: none;">
+              </sc-if>
+              <div style="flex: 1 1 240px; min-width: 0;">
+                <div style="color: #eaa93d; font-size: 16px; letter-spacing: 2px;">{{ r.estrellas }}</div>
+                <div style="font-weight: 700; margin-top: 8px;">{{ r.nombre }}</div>
+                <div style="font-size: 13px; color: #8b8370; margin-top: 2px;">{{ r.fecha }}</div>
+                <p style="font-size: 16px; line-height: 1.6; color: #554c3a; margin: 12px 0 0;">{{ r.texto }}</p>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ formResenaCerrado }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ abrirFormResena }}" style="margin-top: 26px; border: 1.5px solid #af9d36; background: transparent; color: #6f6119; font-family: inherit; font-size: 16px; font-weight: 700; padding: 15px 30px; border-radius: 999px; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Escribir una reseña</button>
+        </sc-if>
+
+        <sc-if value="{{ formResenaListo }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 26px; background: #e8dfae; border-radius: 26px; padding: 24px;">
+            <div style="font-family: 'Caprasimo', serif; font-size: 22px; color: #6f6119;">¡Gracias!</div>
+            <p style="font-size: 16px; line-height: 1.55; color: #554c3a; margin: 10px 0 0;">Tu reseña ya me llegó. La reviso y aparece aquí en cuanto le dé el visto bueno.</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ formResenaAbierto }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 26px; background: #fff; border-radius: 28px; padding: clamp(22px, 3vw, 30px); max-width: 560px;">
+            <div style="font-family: 'Caprasimo', serif; font-size: 22px;">Cuéntanos qué tal</div>
+
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150; margin-top: 20px;">Tu calificación</div>
+            <div style="display: flex; gap: 6px; margin-top: 8px;">
+              <sc-for list="{{ estrellasResena }}" as="e" hint-placeholder-count="5">
+                <button onClick="{{ e.elegir }}" aria-label="Calificar" style="border: none; background: transparent; color: {{ e.color }}; font-size: 30px; line-height: 1; padding: 2px; cursor: pointer;">{{ e.simbolo }}</button>
+              </sc-for>
+            </div>
+
+            <label style="display: grid; gap: 7px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150; margin-top: 20px;">
+              Tu nombre
+              <input value="{{ resenaNombre }}" onChange="{{ onResenaNombre }}" placeholder="Como quieres que aparezca" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff8dc; border-radius: 999px; padding: 13px 18px; font-family: inherit; font-size: 15px; font-weight: 400; color: #241f16;">
+            </label>
+
+            <label style="display: grid; gap: 7px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #6b6150; margin-top: 16px;">
+              Tu reseña
+              <textarea value="{{ resenaTexto }}" onChange="{{ onResenaTexto }}" rows="4" placeholder="¿Cómo te llegó? ¿Qué tal el acabado?" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff8dc; border-radius: 20px; padding: 13px 18px; font-family: inherit; font-size: 15px; font-weight: 400; color: #241f16; resize: vertical;"></textarea>
+            </label>
+
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
+              <label style="border: 1.5px solid rgba(36,31,22,.16); border-radius: 999px; padding: 11px 20px; font-size: 14px; font-weight: 600; color: #554c3a; cursor: pointer;">
+                Agregar una foto
+                <input type="file" accept="image/*" onChange="{{ onResenaFoto }}" style="display: none;">
+              </label>
+              <sc-if value="{{ resenaFotoPuesta }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 14px; color: #6f6119; font-weight: 600;">Foto lista ✓</span>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ resenaConAviso }}" hint-placeholder-val="{{ false }}">
+              <p style="background: #f7d0bc; color: #8a5a3c; font-size: 15px; line-height: 1.45; border-radius: 16px; padding: 13px 18px; margin: 18px 0 0;">{{ resenaAviso }}</p>
+            </sc-if>
+
+            <button onClick="{{ enviarResena }}" style="width: 100%; margin-top: 20px; border: none; background: #af9d36; color: #fff8dc; font-family: inherit; font-size: 16px; font-weight: 700; padding: 16px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">{{ resenaBoton }}</button>
+            <p style="font-size: 13px; color: #8b8370; line-height: 1.5; margin: 14px 0 0;">La reviso antes de publicarla, así que puede tardar un poquito en aparecer.</p>
+          </div>
+        </sc-if>
+      </section>
+
     </section>
   </sc-if>
 
@@ -650,6 +733,32 @@
           <button onClick="{{ cerrarSesion }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 999px; cursor: pointer;" style-hover="background:#f7d0bc; border-color:#f7d0bc; color:#8a5a3c;">Cerrar sesión</button>
         </div>
       </div>
+
+      <sc-if value="{{ hayPendientes }}" hint-placeholder-val="{{ true }}">
+        <section style="margin-top: 32px; background: #f7d0bc; border-radius: 30px; padding: clamp(22px, 3vw, 30px);">
+          <div style="font-family: 'Caprasimo', serif; font-size: 24px; color: #8a5a3c;">{{ numPendientes }}</div>
+          <p style="font-size: 15px; line-height: 1.5; color: #7a4f34; margin: 8px 0 0;">Nadie las ve en la tienda hasta que las apruebes.</p>
+          <div style="display: grid; gap: 14px; margin-top: 22px;">
+            <sc-for list="{{ resenasPendientes }}" as="r" hint-placeholder-count="2">
+              <article style="background: #fff8dc; border-radius: 24px; padding: 20px; display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-start;">
+                <sc-if value="{{ r.tieneFoto }}" hint-placeholder-val="{{ true }}">
+                  <img src="{{ r.foto }}" alt="Foto de la reseña" style="width: 96px; height: 96px; object-fit: cover; border-radius: 18px; flex: none;">
+                </sc-if>
+                <div style="flex: 1 1 260px; min-width: 0;">
+                  <div style="font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #8b8370;">{{ r.producto }}</div>
+                  <div style="color: #eaa93d; font-size: 15px; letter-spacing: 2px; margin-top: 6px;">{{ r.estrellas }}</div>
+                  <div style="font-weight: 700; margin-top: 6px;">{{ r.nombre }} <span style="font-weight: 400; font-size: 13px; color: #8b8370;">· {{ r.fecha }}</span></div>
+                  <p style="font-size: 15px; line-height: 1.55; color: #554c3a; margin: 10px 0 0;">{{ r.texto }}</p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
+                    <button onClick="{{ r.aprobar }}" style="border: none; background: #af9d36; color: #fff8dc; font-family: inherit; font-size: 14px; font-weight: 700; padding: 11px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#8d7c26;">Publicar</button>
+                    <button onClick="{{ r.rechazar }}" style="border: 1.5px solid rgba(36,31,22,.16); background: transparent; color: #554c3a; font-family: inherit; font-size: 14px; font-weight: 600; padding: 11px 22px; border-radius: 999px; cursor: pointer;" style-hover="background:#fff8dc;">Descartar</button>
+                  </div>
+                </div>
+              </article>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
 
       <div style="display: grid; display: flex; flex-wrap: wrap; gap: clamp(24px, 3vw, 36px); margin-top: 36px; align-items: flex-start;">
         <div style="flex: 999 1 460px; min-width: 0; background: #fff; border-radius: 30px; padding: 8px 8px;">
@@ -885,13 +994,10 @@ const FOTO = {
   cStickers: IMG + 'custom-stickers.webp',
   cBox: IMG + 'custom-box.webp'
 };
-const REVIEWS = [
-  { nombre: 'Ana Sofía R.', lugar: 'Guadalajara, Jal.', estrellas: 5, texto: 'Pedí un vaso con mi nombre y quedó igualito a lo que le mandé. Lo uso todos los días y no se ha borrado nada.', compra: 'Vaso personalizado', fecha: 'Hace 2 semanas', foto: './img/review-ana.webp' },
-  { nombre: 'Regina M.', lugar: 'CDMX', estrellas: 5, texto: 'La playera bordada es de mejor calidad de lo que esperaba. El bordado está perfecto y la tela no se siente corriente.', compra: 'Playera personalizada', fecha: 'Hace 1 mes', foto: './img/review-regina.webp' },
-  { nombre: 'Fernanda L.', lugar: 'Monterrey, N.L.', estrellas: 5, texto: 'Compré la agenda con un paquete de stickers y llegó todo súper bien empacado. Ya voy por mi segundo pedido.', compra: 'Agenda y stickers', fecha: 'Hace 3 semanas', foto: './img/review-fernanda.webp' },
-  { nombre: 'Daniela C.', lugar: 'Puebla, Pue.', estrellas: 5, texto: 'La tote bag me la llevo a todos lados. Le pedí un diseño mío y me ayudó a ajustarlo por WhatsApp sin problema.', compra: 'Tote bag personalizada', fecha: 'Hace 5 días', foto: './img/review-daniela.webp' },
-  { nombre: 'Karla V.', lugar: 'Querétaro, Qro.', estrellas: 4, texto: 'Pedí 20 box lunch para el cumple de mi hermana y a todos les encantaron. Tardaron un día más de lo dicho, pero valió la pena.', compra: 'Box lunch personalizado', fecha: 'Hace 2 meses', foto: './img/review-karla.webp' }
-];
+// Las reseñas de ejemplo del diseño se quitaron: eran nombres, textos y fotos
+// inventados presentándose como clientes reales en una tienda ya abierta. El
+// carrusel sale ahora de resenas.json, o sea de las que Mariana aprobó.
+
 const FOTO_CAT = {
   'Vasos y termos': FOTO.vasos,
   'Stickers': FOTO.stickers,
@@ -914,6 +1020,11 @@ const TALLAS = { 'Corte normal': ['XS', 'S', 'M', 'L', 'XL', 'XXL'], 'Oversize':
 const VASO_INCLUYE = 'Popote y tapa de bambú';
 const esPlayera = (cat) => cat === 'Playeras';
 const esVaso = (cat) => cat === 'Vasos y termos';
+const fechaCorta = (iso) => {
+  const d = new Date(iso);
+  return isNaN(d) ? '' : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+const promedio = (lista) => (lista.length ? (lista.reduce((t, r) => t + Number(r.estrellas || 0), 0) / lista.length).toFixed(1) : '0.0');
 const KEY_C = 'decocraft.carrito.v1';
 // El panel solo existe en mipanel.decocraftmx.com, que nginx protege con
 // usuario y contraseña. En el sitio público esto es false y ni el botón ni la
@@ -944,6 +1055,9 @@ class Component extends DCLogic {
       subirVisible: false,
       pedido: '',
       descAbierta: false,
+      resenas: [],
+      pendientes: [],
+      formResena: { abierto: false, estrellas: 5, nombre: '', texto: '', foto: '', enviando: false, aviso: '', listo: false },
       corte: CORTES[0],
       talla: 'M',
       customOpc: {},
@@ -959,6 +1073,8 @@ class Component extends DCLogic {
     // mismo: ayuda a distinguirlas cuando están abiertas a la vez.
     if (ES_PANEL) document.title = 'Panel · DecoCraft';
     this.cargarCatalogo();
+    this.cargarResenas();
+    if (ES_PANEL) this.cargarPendientes();
     this.observe();
     this._hojas = setTimeout(() => this.setState({ hojas: false }), 21000);
     // Solo se re-renderiza al cruzar el umbral, no en cada pixel de scroll.
@@ -1014,6 +1130,59 @@ class Component extends DCLogic {
       .then((p) => { if (Array.isArray(p) && p.length) this.setState({ productos: p }); })
       .catch(() => {});
   }
+  // Las aprobadas son un archivo estático más: la tienda las lee sin pasar
+  // por el servicio del panel.
+  cargarResenas() {
+    fetch('/resenas.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((v) => { if (Array.isArray(v)) this.setState({ resenas: v }); })
+      .catch(() => {});
+  }
+  cargarPendientes() {
+    fetch('/api/resenas')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((v) => { if (v && Array.isArray(v.pendientes)) this.setState({ pendientes: v.pendientes }); })
+      .catch(() => {});
+  }
+  moderar(id, accion) {
+    fetch('/api/resenas/' + accion, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id })
+    })
+      .then((r) => { if (!r.ok) throw new Error(); })
+      .then(() => { this.cargarPendientes(); this.cargarResenas(); })
+      .catch(() => this.setState({ aviso: 'No se pudo. Vuelve a intentarlo.' }));
+  }
+
+  setResena = (k, v) => this.setState((st) => ({ formResena: Object.assign({}, st.formResena, { [k]: v }) }));
+
+  // La foto viaja antes que la reseña: el servidor la guarda fuera de la web
+  // y devuelve un vale que la reseña menciona.
+  onFotoResena = (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    this.setResena('aviso', 'Subiendo la foto…');
+    fetch('/api/resena-foto', { method: 'POST', headers: { 'content-type': f.type || 'application/octet-stream' }, body: f })
+      .then((r) => r.json().then((d) => { if (!r.ok) throw new Error(d.error || 'No se pudo subir'); return d; }))
+      .then((d) => this.setState((st) => ({ formResena: Object.assign({}, st.formResena, { foto: d.foto, aviso: '' }) })))
+      .catch((err) => this.setResena('aviso', err.message));
+  };
+
+  enviarResena = () => {
+    const f = this.state.formResena;
+    if (f.enviando) return;
+    this.setState((st) => ({ formResena: Object.assign({}, st.formResena, { enviando: true, aviso: '' }) }));
+    fetch('/api/resena', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ productoId: this.state.activoId, nombre: f.nombre, estrellas: f.estrellas, texto: f.texto, foto: f.foto })
+    })
+      .then((r) => r.json().then((d) => { if (!r.ok) throw new Error(d.error || 'No se pudo enviar'); return d; }))
+      .then(() => this.setState({ formResena: { abierto: true, estrellas: 5, nombre: '', texto: '', foto: '', enviando: false, aviso: '', listo: true } }))
+      .catch((err) => this.setState((st) => ({ formResena: Object.assign({}, st.formResena, { enviando: false, aviso: err.message }) })));
+  };
+
   persist(productos, carrito) {
     // El carrito es de cada visitante, se queda en su navegador.
     try {
@@ -1196,6 +1365,8 @@ class Component extends DCLogic {
     const gratisDesde = Number(this.props.envioGratisDesde ?? 800);
     const envio = subtotal === 0 || subtotal >= gratisDesde ? 0 : 120;
 
+    const resenasActivo = s.resenas.filter((r) => r.productoId === activo.id);
+
     const conteos = { Todo: publicados.length };
     CATS.forEach((c) => { conteos[c] = publicados.filter((p) => p.categoria === c).length; });
 
@@ -1226,20 +1397,30 @@ class Component extends DCLogic {
       esPersonalizar: s.screen === 'personalizar',
       esGracias: s.screen === 'gracias',
       irPersonalizar: () => this.go('personalizar'),
-      reviews: REVIEWS.map((r) => ({
-        nombre: r.nombre, lugar: r.lugar, texto: r.texto, compra: r.compra, fecha: r.fecha, foto: r.foto,
+      // El carrusel enseña reseñas de verdad, las que Mariana ya aprobó. Si
+      // todavía no hay ninguna, la sección entera no se dibuja: es mejor que
+      // no haya nada a que haya testimonios de mentira.
+      reviews: s.resenas.map((r) => ({
+        nombre: r.nombre,
+        lugar: r.productoNombre || '',
+        texto: r.texto,
+        compra: r.productoNombre || '',
+        fecha: fechaCorta(r.fecha),
+        foto: r.foto,
+        tieneFoto: !!r.foto,
         estrellas: '★★★★★'.slice(0, r.estrellas) + '☆☆☆☆☆'.slice(0, 5 - r.estrellas)
       })),
-      totalReviews: REVIEWS.length,
-      ratingPromedio: (REVIEWS.reduce((t, r) => t + r.estrellas, 0) / REVIEWS.length).toFixed(1),
+      hayResenas: s.resenas.length > 0,
+      totalReviews: s.resenas.length,
+      ratingPromedio: promedio(s.resenas),
       reviewTransform: 'translateX(calc(' + (-s.reviewIdx) + ' * (max(272px, (100% - 48px) / 3) + 24px)))',
-      reviewDots: Array.from({ length: Math.max(1, REVIEWS.length - 2) }, (_, i) => ({
+      reviewDots: Array.from({ length: Math.max(1, s.resenas.length - 2) }, (_, i) => ({
         ancho: s.reviewIdx === i ? '28px' : '9px',
         color: s.reviewIdx === i ? '#af9d36' : 'rgba(36,31,22,.2)',
         ir: () => this.setState({ reviewIdx: i })
       })),
-      reviewSiguiente: () => this.setState((st) => ({ reviewIdx: (st.reviewIdx + 1) % Math.max(1, REVIEWS.length - 2) })),
-      reviewAnterior: () => this.setState((st) => ({ reviewIdx: (st.reviewIdx - 1 + Math.max(1, REVIEWS.length - 2)) % Math.max(1, REVIEWS.length - 2) })),
+      reviewSiguiente: () => this.setState((st) => ({ reviewIdx: (st.reviewIdx + 1) % Math.max(1, s.resenas.length - 2) })),
+      reviewAnterior: () => this.setState((st) => ({ reviewIdx: (st.reviewIdx - 1 + Math.max(1, s.resenas.length - 2)) % Math.max(1, s.resenas.length - 2) })),
       personalizables: PERSONALIZABLES.map((a) => ({
         id: a.id, nombre: a.nombre, desc: a.desc, tono: a.tono, slot: a.slot, img: a.img,
         precioFmt: this.fmt(a.precio),
@@ -1335,6 +1516,50 @@ class Component extends DCLogic {
       activoDesc: activo.desc,
       activoPrecioFmt: this.fmt(activo.precio),
       activoRebaja: !!this.rebaja(activo),
+      activoResenas: resenasActivo.map((r) => ({
+        nombre: r.nombre,
+        texto: r.texto,
+        estrellas: '★★★★★'.slice(0, r.estrellas) + '☆☆☆☆☆'.slice(0, 5 - r.estrellas),
+        fecha: fechaCorta(r.fecha),
+        foto: r.foto,
+        tieneFoto: !!r.foto,
+      })),
+      activoTieneResenas: resenasActivo.length > 0,
+      activoSinResenas: resenasActivo.length === 0,
+      activoNumResenas: resenasActivo.length === 1 ? '1 reseña' : resenasActivo.length + ' reseñas',
+      activoPromedio: promedio(resenasActivo),
+      formResenaCerrado: !s.formResena.abierto,
+      formResenaAbierto: s.formResena.abierto && !s.formResena.listo,
+      formResenaListo: s.formResena.listo,
+      abrirFormResena: () => this.setState((st) => ({ formResena: Object.assign({}, st.formResena, { abierto: true, listo: false }) })),
+      estrellasResena: [1, 2, 3, 4, 5].map((n) => ({
+        simbolo: n <= s.formResena.estrellas ? '★' : '☆',
+        color: n <= s.formResena.estrellas ? '#eaa93d' : 'rgba(36,31,22,.28)',
+        elegir: () => this.setResena('estrellas', n),
+      })),
+      resenaNombre: s.formResena.nombre,
+      resenaTexto: s.formResena.texto,
+      resenaAviso: s.formResena.aviso,
+      resenaConAviso: !!s.formResena.aviso,
+      resenaFotoPuesta: !!s.formResena.foto,
+      resenaBoton: s.formResena.enviando ? 'Enviando…' : 'Enviar reseña',
+      onResenaNombre: (e) => this.setResena('nombre', e.target.value),
+      onResenaTexto: (e) => this.setResena('texto', e.target.value),
+      onResenaFoto: this.onFotoResena,
+      enviarResena: this.enviarResena,
+      resenasPendientes: s.pendientes.map((r) => ({
+        producto: r.productoNombre,
+        nombre: r.nombre,
+        texto: r.texto,
+        estrellas: '★★★★★'.slice(0, r.estrellas) + '☆☆☆☆☆'.slice(0, 5 - r.estrellas),
+        fecha: fechaCorta(r.fecha),
+        foto: r.foto ? '/api/resenas/foto?f=' + r.foto : '',
+        tieneFoto: !!r.foto,
+        aprobar: () => this.moderar(r.id, 'aprobar'),
+        rechazar: () => this.moderar(r.id, 'rechazar'),
+      })),
+      hayPendientes: s.pendientes.length > 0,
+      numPendientes: s.pendientes.length === 1 ? '1 reseña por revisar' : s.pendientes.length + ' reseñas por revisar',
       activoPrecioAntesFmt: this.rebaja(activo) ? this.rebaja(activo).antesFmt : '',
       activoDescuentoPct: this.rebaja(activo) ? '−' + this.rebaja(activo).pct + '%' : '',
       activoTono: this.tono(activoIdx < 0 ? 0 : activoIdx),

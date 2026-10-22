@@ -17,13 +17,23 @@ createServer(async (req, res) => {
   let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
   if (p.startsWith('/api/')) {
     try {
-      const r = await fetch(API + p, {
+      const cabeceras = { 'content-type': req.headers['content-type'] || 'application/octet-stream' };
+      // La sesión viaja en cookie, así que hay que pasarla en los dos sentidos
+      // o el panel local nunca se da por autenticado.
+      if (req.headers.cookie) cabeceras.cookie = req.headers.cookie;
+      cabeceras['x-real-ip'] = req.socket.remoteAddress || '127.0.0.1';
+      const r = await fetch(API + p + (new URL(req.url, 'http://x').search || ''), {
         method: req.method,
-        headers: { 'content-type': req.headers['content-type'] || 'application/octet-stream' },
+        headers: cabeceras,
         body: ['GET', 'HEAD'].includes(req.method) ? undefined : req,
         duplex: 'half',
       });
-      res.writeHead(r.status, { 'content-type': r.headers.get('content-type') || 'application/json' });
+      const salida = { 'content-type': r.headers.get('content-type') || 'application/json' };
+      const galleta = r.headers.getSetCookie ? r.headers.getSetCookie() : [];
+      // En local se sirve por http, donde el navegador descarta las cookies
+      // marcadas Secure. Se quita solo aquí; en producción va con Secure.
+      if (galleta.length) salida['set-cookie'] = galleta.map((c) => c.replace('; Secure', ''));
+      res.writeHead(r.status, salida);
       res.end(Buffer.from(await r.arrayBuffer()));
     } catch (e) {
       res.writeHead(502, { 'content-type': 'application/json' });

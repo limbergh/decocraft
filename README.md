@@ -87,3 +87,35 @@ mipanel.decocraftmx.com                 decocraftmx.com
   comparte es el catálogo.
 - Mientras no exista `catalogo.json`, la tienda muestra los 9 productos de
   ejemplo del diseño (`SEED`). El primer guardado del panel lo crea.
+
+## Reseñas de clientes
+
+Las deja cualquiera desde la ficha del producto (estrellas, texto y foto
+opcional), pero **no se publica ninguna hasta que Mariana la aprueba** en el
+panel. Mientras tanto no existen para la tienda: ni el texto ni la foto son
+alcanzables por URL.
+
+```
+ficha del producto                         panel
+  POST /api/resena-foto  ─┐
+  POST /api/resena       ─┴─> /var/lib/decocraft  ──> Publicar ─┐
+     (sin sesión,            pendientes.json                    │
+      con freno por IP)      fotos/                             v
+                                                        resenas.json
+                                                        img/resenas/
+                                                      (archivos del sitio,
+                                                       los lee la tienda)
+```
+
+- **Moderación** en el panel: cada reseña pendiente sale con su foto, y los
+  botones *Publicar* y *Descartar*. Descartar borra también la foto.
+- **Contra el spam**: 3 reseñas por hora y una por producto al día desde la
+  misma IP; se rechaza la misma reseña repetida (comparando sin acentos,
+  mayúsculas ni espacios); el producto tiene que existir en el catálogo; la
+  foto se valida por su firma de archivo, no por lo que diga el navegador.
+  Las fotos subidas que nunca llegan a una reseña se barren a las 24 horas.
+- **Rutas públicas**: en `decocraftmx.com` solo existen `/api/resena` y
+  `/api/resena-foto`. Cualquier otra ruta de `/api/` responde 404; el resto
+  del servicio vive únicamente en `mipanel`, con sesión.
+- **El carrusel del inicio** sale de las reseñas aprobadas. Si no hay
+  ninguna, la sección no se dibuja.
