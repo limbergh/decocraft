@@ -26,6 +26,7 @@ const PUERTO = Number(process.env.DECOCRAFT_PUERTO || 8500);
 const CUENTA = process.env.DECOCRAFT_CUENTA || '/etc/decocraft/panel.json';
 const DATOS = process.env.DECOCRAFT_DATOS || '/var/lib/decocraft';
 const CATALOGO = join(RAIZ, 'catalogo.json');
+const AJUSTES = join(RAIZ, 'ajustes.json');
 const DIR_SUBIDAS = join(RAIZ, 'img', 'subidas');
 
 const MAX_JSON = 2 * 1024 * 1024; // 2 MB de catálogo es muchísimo texto
@@ -278,6 +279,21 @@ const servidor = createServer(async (req, res) => {
           : await resenas.borrarPublicada(id);
       console.log(`reseña ${id}: ${accion}`);
       return responder(res, 200, hecho);
+    }
+
+    // Qué categorías salen en el menú de la tienda. Es un archivo estático
+    // más: la tienda lo lee sin pasar por aquí.
+    if (req.method === 'PUT' && ruta === '/api/ajustes') {
+      const datos = JSON.parse((await leerCuerpo(req, 8192)).toString('utf8') || '{}');
+      const menu = (Array.isArray(datos.menu) ? datos.menu : [])
+        .map((c) => texto(c, 60, 'una categoría del menú', 'el menú'))
+        .map((c) => c.trim())
+        .filter(Boolean)
+        .filter((c, i, a) => a.indexOf(c) === i)
+        .slice(0, 12);
+      await guardarAtomico(AJUSTES, JSON.stringify({ menu }, null, 2));
+      console.log('menú guardado: ' + (menu.join(', ') || '(vacío)'));
+      return responder(res, 200, { ok: true, menu });
     }
 
     if (req.method === 'POST' && ruta === '/api/imagen') {

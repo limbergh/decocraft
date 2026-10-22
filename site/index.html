@@ -747,6 +747,20 @@
         </div>
       </div>
 
+      <section style="margin-top: 32px; background: #fff; border-radius: 30px; padding: clamp(22px, 3vw, 30px);">
+        <div style="font-family: 'Caprasimo', serif; font-size: 22px;">Menú de la tienda</div>
+        <p style="font-size: 15px; line-height: 1.5; color: #6b6150; margin: 8px 0 0; max-width: 560px;">Marca las categorías que quieres ver arriba, en el menú. Para que aparezca una nueva, escríbela en la categoría de un producto y guárdalo.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+          <sc-for list="{{ menuCategorias }}" as="c" hint-placeholder-count="6">
+            <button onClick="{{ c.alternar }}" style="display: inline-flex; align-items: center; gap: 9px; border: 1.5px solid {{ c.borde }}; background: {{ c.fondo }}; color: {{ c.color }}; font-family: inherit; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; cursor: pointer;">
+              {{ c.nombre }}
+              <span style="opacity: .72; font-weight: 400;">{{ c.n }}</span>
+              <span style="font-weight: 700;">{{ c.marca }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
       <sc-if value="{{ hayPendientes }}" hint-placeholder-val="{{ true }}">
         <section style="margin-top: 32px; background: #f7d0bc; border-radius: 30px; padding: clamp(22px, 3vw, 30px);">
           <div style="font-family: 'Caprasimo', serif; font-size: 24px; color: #8a5a3c;">{{ numPendientes }}</div>
@@ -810,11 +824,13 @@
             </label>
             <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
               Categoría
-              <select value="{{ formCategoria }}" onChange="{{ onFormCategoria }}" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-size: 15px; font-weight: 400; color: #241f16;">
+              <input value="{{ formCategoria }}" onChange="{{ onFormCategoria }}" list="dc-categorias" placeholder="Vasos y termos" style="border: 1.5px solid rgba(36,31,22,.16); background: #fff; border-radius: 999px; padding: 12px 18px; font-family: inherit; font-size: 15px; font-weight: 400; color: #241f16;">
+              <datalist id="dc-categorias">
                 <sc-for list="{{ categoriasBase }}" as="c" hint-placeholder-count="6">
-                  <option value="{{ c }}">{{ c }}</option>
+                  <option value="{{ c }}"></option>
                 </sc-for>
-              </select>
+              </datalist>
+              <span style="font-size: 12px; font-weight: 400; color: #8b8370; line-height: 1.4;">Escribe una existente o inventa una nueva: la categoría se crea sola al guardar.</span>
             </label>
             <label style="display: grid; gap: 7px; font-size: 13px; font-weight: 700; color: #554c3a;">
               Precio de hoy (MXN)
@@ -991,7 +1007,14 @@ const SEED = [
   { id: 'p8', nombre: 'Libreta cosida a mano', categoria: 'Papelería creativa', precio: 180, desc: 'Papel crema de 90g, costura vista, 80 páginas.', badge: 'Nuevo', activo: true, img: '', slot: 'libreta' },
   { id: 'p9', nombre: 'Box lunch decorado', categoria: 'Box lunch', precio: 190, desc: 'Caja con tapa y grabado, ideal para regalo o evento.', badge: '', activo: true, img: '', slot: 'box lunch' }
 ];
-const CATS = ['Vasos y termos', 'Stickers', 'Papelería creativa', 'Playeras', 'Agendas y planners', 'Box lunch'];
+const CATS_BASE = ['Vasos y termos', 'Stickers', 'Papelería creativa', 'Playeras', 'Agendas y planners', 'Box lunch'];
+// Las categorías no son una lista cerrada: son las que usan los productos. Las
+// de siempre van primero aunque se queden vacías, para que la tienda no cambie
+// de forma sola, y detrás las que Mariana haya inventado.
+const categoriasDe = (productos) => {
+  const usadas = productos.map((p) => p.categoria).filter(Boolean);
+  return CATS_BASE.concat(usadas.filter((c) => !CATS_BASE.includes(c))).filter((c, i, a) => a.indexOf(c) === i);
+};
 const IMG = './img/';
 const FOTO = {
   hero: IMG + 'hero.webp',
@@ -1069,12 +1092,13 @@ class Component extends DCLogic {
       pedido: '',
       descAbierta: false,
       resenas: [],
+      menuCats: [],
       pendientes: [],
       formResena: { abierto: false, estrellas: 5, nombre: '', texto: '', foto: '', enviando: false, aviso: '', listo: false },
       corte: CORTES[0],
       talla: 'M',
       customOpc: {},
-      form: { nombre: '', categoria: CATS[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true }
+      form: { nombre: '', categoria: CATS_BASE[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true }
     };
   }
   componentDidMount() {
@@ -1087,6 +1111,7 @@ class Component extends DCLogic {
     if (ES_PANEL) document.title = 'Panel · DecoCraft';
     this.cargarCatalogo();
     this.cargarResenas();
+    this.cargarAjustes();
     if (ES_PANEL) this.cargarPendientes();
     this.observe();
     this._hojas = setTimeout(() => this.setState({ hojas: false }), 21000);
@@ -1150,6 +1175,27 @@ class Component extends DCLogic {
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (Array.isArray(v)) this.setState({ resenas: v }); })
       .catch(() => {});
+  }
+  // Qué categorías puso Mariana en el menú. Si el archivo no existe todavía,
+  // el menú se queda con lo de siempre.
+  cargarAjustes() {
+    fetch('/ajustes.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((v) => { if (v && Array.isArray(v.menu)) this.setState({ menuCats: v.menu }); })
+      .catch(() => {});
+  }
+  alternarMenuCat(cat) {
+    const menu = this.state.menuCats.includes(cat)
+      ? this.state.menuCats.filter((c) => c !== cat)
+      : this.state.menuCats.concat(cat);
+    this.setState({ menuCats: menu });
+    fetch('/api/ajustes', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ menu })
+    })
+      .then((r) => r.json().then((d) => { if (!r.ok) throw new Error(d.error || 'No se pudo guardar'); }))
+      .catch((e) => this.setState({ aviso: e.message, menuCats: this.state.menuCats }));
   }
   cargarPendientes() {
     fetch('/api/resenas')
@@ -1291,7 +1337,7 @@ class Component extends DCLogic {
       .then((d) => { this.setForm('img', d.url); this.setState({ aviso: '' }); })
       .catch((err) => this.setState({ aviso: 'No se pudo subir la foto: ' + err.message }));
   };
-  nuevo = () => this.setState({ editId: null, aviso: '', form: { nombre: '', categoria: CATS[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true } });
+  nuevo = () => this.setState({ editId: null, aviso: '', form: { nombre: '', categoria: CATS_BASE[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true } });
   editar = (p) => {
     this.setState({ editId: p.id, aviso: '', form: { nombre: p.nombre, categoria: p.categoria, precio: String(p.precio), precioAntes: p.precioAntes ? String(p.precioAntes) : '', desc: p.desc, badge: p.badge || '', img: p.img || '', activo: p.activo !== false } });
     window.scrollTo(0, 0);
@@ -1326,7 +1372,7 @@ class Component extends DCLogic {
     } else {
       productos = [Object.assign({ id: 'p' + Date.now() }, base)].concat(this.state.productos);
     }
-    this.setState({ productos, editId: null, aviso: this.state.editId ? 'Cambios guardados.' : 'Producto publicado.', form: { nombre: '', categoria: CATS[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true } });
+    this.setState({ productos, editId: null, aviso: this.state.editId ? 'Cambios guardados.' : 'Producto publicado.', form: { nombre: '', categoria: CATS_BASE[0], precio: '', precioAntes: '', desc: '', badge: '', img: '', activo: true } });
     this.persist(productos, null);
   };
 
@@ -1383,8 +1429,9 @@ class Component extends DCLogic {
 
     const resenasActivo = s.resenas.filter((r) => r.productoId === activo.id);
 
+    const categorias = categoriasDe(s.productos);
     const conteos = { Todo: publicados.length };
-    CATS.forEach((c) => { conteos[c] = publicados.filter((p) => p.categoria === c).length; });
+    categorias.forEach((c) => { conteos[c] = publicados.filter((p) => p.categoria === c).length; });
 
     return {
       esInicio: s.screen === 'inicio',
@@ -1501,18 +1548,37 @@ class Component extends DCLogic {
       irCatalogo: () => { this.setState({ catFiltro: 'Todo' }); this.go('catalogo'); },
       irCarrito: () => this.go('carrito'),
       irAdmin: () => this.go('admin'),
-      nav: [
-        { label: 'Catálogo', go: () => this.go('catalogo') },
-        { label: 'Vasos personalizados', go: () => this.go('catalogo') },
-        { label: 'Personalizados por ti', go: () => this.go('personalizar') },
-        { label: 'Sobre mí', go: () => this.go('inicio') }
-      ],
+      nav: [{ label: 'Catálogo', go: () => { this.setState({ catFiltro: 'Todo' }); this.go('catalogo'); } }]
+        // Una categoría que se quedó sin productos no deja una entrada muerta.
+        .concat(s.menuCats.filter((c) => conteos[c] > 0).map((c) => ({
+          label: c,
+          go: () => { this.setState({ catFiltro: c }); this.go('catalogo'); }
+        })))
+        .concat([
+          { label: 'Personalizados por ti', go: () => this.go('personalizar') },
+          { label: 'Sobre mí', go: () => this.go('inicio') }
+        ]),
+      menuCategorias: categorias.map((c) => ({
+        nombre: c,
+        n: conteos[c] + (conteos[c] === 1 ? ' producto' : ' productos'),
+        marca: s.menuCats.includes(c) ? '✓' : '',
+        fondo: s.menuCats.includes(c) ? '#af9d36' : 'transparent',
+        color: s.menuCats.includes(c) ? '#fff8dc' : '#554c3a',
+        borde: s.menuCats.includes(c) ? '#af9d36' : 'rgba(36,31,22,.16)',
+        alternar: () => this.alternarMenuCat(c)
+      })),
       totalPiezas: items.reduce((t, it) => t + it.qty, 0),
       conteoProductos: '+' + publicados.length,
       railRef: this.railRef,
       onDragStart: this.onDragStart,
-      categoriasHome: CATS.map((c, i) => ({
-        nombre: c, piezas: conteos[c] + ' diseños', tono: this.tono(i), slot: c.toLowerCase(), img: FOTO_CAT[c],
+      // Las categorías nuevas no tienen foto de archivo, así que toman la del
+      // primer producto que haya dentro. Y las vacías no se enseñan.
+      categoriasHome: categorias.filter((c) => conteos[c] > 0).map((c, i) => ({
+        nombre: c,
+        piezas: conteos[c] + (conteos[c] === 1 ? ' diseño' : ' diseños'),
+        tono: this.tono(i),
+        slot: c.toLowerCase(),
+        img: FOTO_CAT[c] || (publicados.find((p) => p.categoria === c && p.img) || {}).img || '',
         abrir: () => { this.setState({ catFiltro: c }); this.go('catalogo'); }
       })),
       destacados: publicados.slice(0, 8).map(this.decorar),
@@ -1521,7 +1587,7 @@ class Component extends DCLogic {
       resumenCatalogo: publicados.length + ' productos listos para enviar · ' + (s.catFiltro === 'Todo' ? 'todas las categorías' : s.catFiltro),
       busqueda: s.busqueda,
       onBuscar: (e) => this.setState({ busqueda: e.target.value }),
-      filtrosCat: ['Todo'].concat(CATS).map((c) => ({
+      filtrosCat: ['Todo'].concat(categorias.filter((c) => conteos[c] > 0)).map((c) => ({
         nombre: c, n: conteos[c],
         fondo: s.catFiltro === c ? '#af9d36' : 'transparent',
         color: s.catFiltro === c ? '#fff8dc' : '#554c3a',
@@ -1630,7 +1696,7 @@ class Component extends DCLogic {
         editar: () => this.editar(p),
         borrar: () => this.borrar(p.id)
       })),
-      categoriasBase: CATS,
+      categoriasBase: categorias,
       tituloForm: s.editId ? 'Editar producto' : 'Nuevo producto',
       formNombre: s.form.nombre,
       formCategoria: s.form.categoria,

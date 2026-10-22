@@ -119,3 +119,18 @@ ficha del producto                         panel
   del servicio vive únicamente en `mipanel`, con sesión.
 - **El carrusel del inicio** sale de las reseñas aprobadas. Si no hay
   ninguna, la sección no se dibuja.
+
+## Categorías y menú
+
+Las categorías no son una lista cerrada: **son las que usan los productos**.
+Para crear una, se escribe en el campo Categoría de un producto y se guarda.
+Las seis de siempre salen primero aunque se queden vacías; las nuevas se
+añaden detrás. Una categoría sin productos no aparece en la tienda.
+
+El menú de arriba lo arma Mariana: en el panel, **Menú de la tienda** lista
+todas sus categorías y marca las que quiere ver arriba. Se guarda en
+`ajustes.json` (otro archivo estático que lee la tienda). Una categoría
+marcada que se quede sin productos no deja una entrada muerta en el menú.
+
+Las categorías nuevas no tienen foto de archivo, así que en el carrusel del
+inicio toman la del primer producto que haya dentro.
